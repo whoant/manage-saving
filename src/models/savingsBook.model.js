@@ -1,4 +1,4 @@
-const {Sequelize, DataTypes} = require('sequelize');
+const {Sequelize, DataTypes, DATE} = require('sequelize');
 
 module.exports = sequelize => {
     return sequelize.define('SavingsBook', {
@@ -25,13 +25,18 @@ module.exports = sequelize => {
             allowNull: false,
             defaultValue: 1
         },
-        closingDate: {
+        createdDate: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: false,
+            defaultValue: Sequelize.NOW
         },
         expirationDate: {
             type: DataTypes.DATE,
             allowNull: false
-        }
+        },
+        closingDate: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
     });
 };

@@ -1,5 +1,13 @@
 const {sequelize} = require('../models');
 
 module.exports = async () => {
-    await sequelize.sync({alter: true});
+    try {
+        await sequelize.sync({alter: true});
+        console.log('Connect database successfully');
+    } catch (e) {
+        console.error('Connect database failed');
+        console.error(e);
+        process.exit(0);
+    }
+
 };
