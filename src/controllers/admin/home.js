@@ -1,18 +1,18 @@
 const {Staff, Office} = require('../../models');
 
-
-module.exports.getListUser = async (req, res, next) => {
+module.exports.get = async (req, res, next) => {
     try {
-        const listStaff = await Staff.findAll({
-            include: Office
-        });
-        // console.log(listUsers);
-        res.json({
-            msg: 'ok',
-            data: listStaff
+        const countOffice = await Office.count();
+        const countStaff = await Staff.count();
+        res.render('admin/home', {
+            countOffice,
+            countStaff
         });
 
     } catch (e) {
-        console.error(e);
+        res.render('admin/home', {
+            countOffice: 0,
+            countStaff: 0
+        });
     }
-}
+};

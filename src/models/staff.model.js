@@ -20,16 +20,24 @@ module.exports = sequelize => {
                 min: 6
             }
         },
-        fullName: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        phoneNumber: {
+        email: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        phone: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        dayOfBirth: {
+        birthday: {
             type: DataTypes.DATE,
+            allowNull: false
+        },
+        sex: {
+            type: DataTypes.BOOLEAN,
             allowNull: false
         },
     });

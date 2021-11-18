@@ -1,0 +1,73 @@
+extends ../layout/main.pug
+
+mixin list(stt, id, user, pass, name)
+    tr
+        th(scope='row')= stt
+        td
+            a(href='/admin/view-data/' + id )= user
+        td= name
+        td= pass
+        td
+            a.btn.btn-primary.mr-2(href='/admin/users/' + id + '/edit')
+                | Chỉnh sửa
+            a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id)
+                | Xoá
+
+block navbar
+    include ../layout/navbarAdmin.pug
+block content
+    .row
+        .col-12.mt-4
+            a.btn.btn-warning(href='/admin/user/create') Thêm nhân viên mới
+        .col-12.mt-2
+            table.table.table-bordered.text-center
+                thead
+                    tr
+                        th(scope='col', width='2%') #
+                        th(scope='col') Tài khoản
+                        th(scope='col') Tên
+                        th(scope='col') Mật khẩu
+                        th(scope='col', width='20%') Chức năng
+                tbody
+                    if users
+                        - var x = 1
+                        each user in users
+                            +list(x++, user.id, user.user, user.pass, user.name)
+
+
+    //- Modal delete user
+    #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Xoá người dùng ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    | Bạn chắc chắn xoá người dùng này chứ ?
+                .modal-footer
+                    button.btn.btn-danger#btn-delete-user(type='button') Xoá bỏ
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+
+    //- Form delete user
+    form(method="post", name="form-delete-user", style="display: none;")
+
+
+    script.
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteForm = document.forms['form-delete-user'];
+            let idUser = null;
+
+            $('#delete-user-modal').on('show.bs.modal', (event) => {
+                const button = $(event.relatedTarget);
+                idUser = button.data('id');
+
+            });
+
+
+            document.getElementById('btn-delete-user').addEventListener('click', () => {
+                deleteForm.action = '/admin/user/' + idUser  + '?_method=DELETE';
+                deleteForm.submit();
+            });
+
+        });
