@@ -1,7 +1,7 @@
 const expressLoader = require('./express');
 const mysqlLoader = require('./mysql');
 
-module.exports = expressApp => {
-    mysqlLoader();
+module.exports = async expressApp => {
+    await mysqlLoader();
     expressLoader(expressApp);
 };
