@@ -1,5 +1,5 @@
 const express = require("express");
-const pug = require('pug');
+const methodOverride = require('method-override');
 const path = require('path');
 
 const route = require('../routes');
@@ -7,7 +7,8 @@ module.exports = app => {
 
     app.use(express.urlencoded({extended: true}));
     app.use(express.json());
-
+    
+    app.use(methodOverride('_method'));
     app.set('view engine', 'pug');
     app.set('views', path.join(__dirname, '../', 'views'));
 

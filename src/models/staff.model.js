@@ -16,9 +16,6 @@ module.exports = sequelize => {
         password: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: {
-                min: 6
-            }
         },
         name: {
             type: DataTypes.STRING,
@@ -34,6 +31,10 @@ module.exports = sequelize => {
         },
         birthday: {
             type: DataTypes.DATE,
+            allowNull: false
+        },
+        address: {
+            type: DataTypes.TEXT,
             allowNull: false
         },
         sex: {

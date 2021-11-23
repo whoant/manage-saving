@@ -4,7 +4,11 @@ const route = express.Router();
 
 route.get('/', adminController.home.get);
 
-route.get('/user', adminController.user.get);
+route.get('/user', adminController.user.getAll);
+
+route.get('/user/:id/edit', adminController.user.getDetail);
+
+route.put('/user/:id', adminController.user.updateUser);
 
 route.get('/user/create', adminController.createUser.get);
 

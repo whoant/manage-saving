@@ -1,14 +1,14 @@
 extends ../layout/main.pug
 
-mixin list(stt, id, user, pass, name)
+mixin list(stt, id, name, user, office)
     tr
         th(scope='row')= stt
         td
-            a(href='/admin/view-data/' + id )= user
-        td= name
-        td= pass
+            a(href='/admin/user/' + id + '/edit')= name
+        td= user
+        td= office
         td
-            a.btn.btn-primary.mr-2(href='/admin/users/' + id + '/edit')
+            a.btn.btn-primary.mr-2(href='/admin/user/' + id + '/edit')
                 | Chỉnh sửa
             a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id)
                 | Xoá
@@ -16,23 +16,28 @@ mixin list(stt, id, user, pass, name)
 block navbar
     include ../layout/navbarAdmin.pug
 block content
-    .row
-        .col-12.mt-4
+    .row.mt-4
+        .col-6
             a.btn.btn-warning(href='/admin/user/create') Thêm nhân viên mới
+        .col-6
+            form(action="/admin/user", method="get")
+                .form-group
+                    input#name.form-control(type="text", name="search", placeholder="Nhập tên cần tìm kiếm", value= search ? search: "")
         .col-12.mt-2
             table.table.table-bordered.text-center
                 thead
                     tr
                         th(scope='col', width='2%') #
-                        th(scope='col') Tài khoản
                         th(scope='col') Tên
-                        th(scope='col') Mật khẩu
+                        th(scope='col') Username
+                        th(scope='col') Chức vụ
                         th(scope='col', width='20%') Chức năng
                 tbody
-                    if users
+                    if listStaffs
                         - var x = 1
-                        each user in users
-                            +list(x++, user.id, user.user, user.pass, user.name)
+                        each staff in listStaffs
+                            +list(x++, staff.id, staff.name, staff.username, staff.Office.name)
+
 
 
     //- Modal delete user
@@ -61,12 +66,10 @@ block content
             $('#delete-user-modal').on('show.bs.modal', (event) => {
                 const button = $(event.relatedTarget);
                 idUser = button.data('id');
-
             });
 
-
             document.getElementById('btn-delete-user').addEventListener('click', () => {
-                deleteForm.action = '/admin/user/' + idUser  + '?_method=DELETE';
+                deleteForm.action = '/admin/staff/' + idUser  + '?_method=DELETE';
                 deleteForm.submit();
             });
 

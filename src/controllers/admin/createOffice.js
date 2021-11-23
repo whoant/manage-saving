@@ -15,8 +15,8 @@ module.exports.post = async (req, res, next) => {
             });
         }
 
-        const nickName = slug(name, '_');
-        await Office.create({name, nickName});
+        const short_name = slug(name, '_');
+        await Office.create({name, short_name});
         res.redirect('/admin/office');
 
     } catch (e) {

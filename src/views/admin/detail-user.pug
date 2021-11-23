@@ -3,54 +3,59 @@ block navbar
     include ../layout/navbarAdmin.pug
 block content
     .row
-
         .col-xl-12.col.md-12.col-12
             .card.mt-5
                 .card-body
-                    h3.card-title.text-center Thêm nhân viên mới
+                    h3.card-title.text-center Chi tiết nhân viên: #{staff.name}
                     .row
                         .col-12
-                            if error
-                                .alert.alert-danger= error
-                            form(action="/admin/user/create", method="post")
+                            if msg
+                                .alert.alert-primary= msg
+                            if errors
+                                each error in errors
+                                    .alert.alert-danger= error
+                            form(action="/admin/user/"+ staff.id +"?_method=PUT", method="post")
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="name") Họ và tên
-                                        input#name.form-control(type="text", name="name", value= name ? name: "")
+                                        input#name.form-control(type="text", name="name", value= staff.name)
                                     .form-group.col-lg-4.col-12
                                         label(for="username") Tài khoản
-                                        input#username.form-control(type="text", name="username", value= username ? username: "")
+                                        input#username.form-control(type="text", name="username", value= staff.username, disabled)
                                     .form-group.col-lg-4.col-12
                                         label(for="password") Mật khẩu
-                                        input#password.form-control(type="text", name="password", value= password ? username: "")
+                                        input#password.form-control(type="password", name="password")
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="email") Email
-                                        input#email.form-control(type="text", name="email", value= email ? email: "")
+                                        input#email.form-control(type="text", name="email", value= staff.email)
                                     .form-group.col-lg-4.col-12
                                         label(for="phone") Số điện thoại
-                                        input#phone.form-control(type="text", name="phone", value= phone ? phone: "")
+                                        input#phone.form-control(type="text", name="phone", value= staff.phone)
                                     .form-group.col-lg-4.col-12
                                         label(for="sex") Giới tính
                                         select.form-control#sex(name="sex")
-                                            option(value="0") Nam
-                                            option(value="1") Nữ
+                                            if staff.sex == 0
+                                                option(value="0", selected) Nam
+                                                option(value="1") Nữ
+                                            else
+                                                option(value="1", selected) Nữ
+                                                option(value="0") Nam
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="address") Địa chỉ
-                                        input#address.form-control(type="text", name="address", value= address ? address: "")
+                                        input#address.form-control(type="text", name="address", value= staff.address)
                                     .form-group.col-lg-4.col-12
                                         label(for="birthday") Ngày sinh
-                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday: "")
+                                        input#birthday.form-control(type="date", name="birthday", value= staff.birthday)
                                     .form-group.col-lg-4.col-12
                                         label(for="officeId") Chức vụ
                                         select.form-control#officeId(name="officeId")
-                                            if listOffices
                                                 each office in listOffices
-                                                    if office.id == officeId
+                                                    if office.id == staff.officeId
                                                         option(value= office.id, selected)= office.name
                                                     else
                                                         option(value= office.id)= office.name
 
 
-                                button.btn.btn-danger.float-right Tạo tài khoản mới
+                                button.btn.btn-danger.float-right Cập nhập thông tin nhân viên
