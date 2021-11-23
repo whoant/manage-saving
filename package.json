@@ -5,6 +5,7 @@
   "author": "Vo Van Hoang Tuan <19dh110082@st.huflit.edu.vn>",
   "license": "MIT",
   "scripts": {
+    "start": "node src/app.js",
     "dev": "nodemon --inspect src/app.js"
   },
   "dependencies": {
