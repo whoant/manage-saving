@@ -10,8 +10,7 @@ block content
                     h3.card-title.text-center Thêm nhân viên mới
                     .row
                         .col-12
-                            if error
-                                .alert.alert-danger= error
+
                             form(action="/admin/user/create", method="post")
                                 .row
                                     .form-group.col-lg-4.col-12

@@ -14,7 +14,7 @@ module.exports.getAll = async (req, res) => {
             },
             include: Office,
         });
-        console.log(listStaffs);
+
         res.render('admin/user', {listStaffs, search});
     } catch (e) {
         console.error(e);
@@ -76,7 +76,7 @@ module.exports.updateUser = async (req, res) => {
             });
         const staff = await Staff.findByPk(id, {raw: true});
         const listOffices = await Office.findAll({raw: true});
-        console.log(staff);
+       
         return res.render('admin/detail-user', {
             staff,
             listOffices,

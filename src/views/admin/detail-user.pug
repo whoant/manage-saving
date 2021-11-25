@@ -9,11 +9,7 @@ block content
                     h3.card-title.text-center Chi tiết nhân viên: #{staff.name}
                     .row
                         .col-12
-                            if msg
-                                .alert.alert-primary= msg
-                            if errors
-                                each error in errors
-                                    .alert.alert-danger= error
+
                             form(action="/admin/user/"+ staff.id +"?_method=PUT", method="post")
                                 .row
                                     .form-group.col-lg-4.col-12

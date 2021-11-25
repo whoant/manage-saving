@@ -50,7 +50,7 @@ module.exports.post = async (req, res) => {
         return res.render('admin/create-user', {
             ...req.body,
             listOffices,
-            error,
+            errors: [error],
             officeId
         });
 
