@@ -9,6 +9,7 @@ const PeriodModel = require('./period.model');
 const SavingsBookModel = require('./savingsBook.model');
 const ParameterModel = require('./parameter.model');
 const FormCreateModel = require('./formCreate.model');
+const FormCloseModel = require('./formClose.model');
 
 const {DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS} = DATABASE;
 
@@ -32,6 +33,7 @@ const Period = PeriodModel(sequelize);
 const SavingsBook = SavingsBookModel(sequelize);
 const Parameter = ParameterModel(sequelize);
 const FormCreate = FormCreateModel(sequelize);
+const FormClose = FormCloseModel(sequelize);
 
 Office.hasMany(Staff, {
     foreignKey: 'officeId'
@@ -53,6 +55,10 @@ FormCreate.belongsTo(SavingsBook, {
     foreignKey: 'savingsBookId'
 });
 
+SavingsBook.hasOne(FormCreate, {
+    foreignKey: 'savingsBookId'
+});
+
 Staff.hasMany(FormCreate, {
     foreignKey: 'staffId'
 });
@@ -61,9 +67,23 @@ FormCreate.belongsTo(Staff, {
     foreignKey: 'staffId'
 });
 
-SavingsBook.hasOne(FormCreate, {
+
+Staff.hasMany(FormClose, {
+    foreignKey: 'staffId'
+});
+
+FormClose.belongsTo(Staff, {
+    foreignKey: 'staffId'
+});
+
+FormClose.belongsTo(SavingsBook, {
     foreignKey: 'savingsBookId'
 });
+
+SavingsBook.hasOne(FormClose, {
+    foreignKey: 'savingsBookId'
+});
+
 
 Period.hasMany(Interest, {
     foreignKey: 'periodId'

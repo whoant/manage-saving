@@ -1,12 +1,11 @@
 const slug = require('slug');
-const {Office} = require("../../models");
+const {Office, Staff} = require("../../models");
 
-
-module.exports.get = (req, res, next) => {
+module.exports.get = (req, res) => {
     res.render('admin/create-office');
 };
 
-module.exports.post = async (req, res, next) => {
+module.exports.post = async (req, res) => {
     const {name} = req.body;
     try {
         if (name === '') {
@@ -17,7 +16,16 @@ module.exports.post = async (req, res, next) => {
 
         const short_name = slug(name, '_');
         await Office.create({name, short_name});
-        res.redirect('/admin/office');
+
+        const listOffices = await Office.findAll({
+            attributes: ['id', 'name'],
+            include: Staff
+        });
+
+        res.render('admin/office', {
+            listOffices,
+            msg: 'Tạo chức vụ thành công'
+        });
 
     } catch (e) {
         res.render('admin/create-office', {
