@@ -18,10 +18,10 @@ module.exports.get = async (req, res) => {
 
 module.exports.post = async (req, res) => {
     const {name, username, password, email, phone, sex, birthday, officeId, address} = req.body
+    if (!name || !username || !password || !email || !phone || !sex || !birthday || !officeId || !address) {
+        throw new Error('Vui lòng nhập đủ thông tin !');
+    }
     try {
-        if (!name || !username || !password || !email || !phone || !sex || !birthday || !officeId || !address) {
-            throw new Error('Vui lòng nhập đủ thông tin !');
-        }
         await Staff.create({
             name,
             username,

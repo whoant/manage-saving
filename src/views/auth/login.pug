@@ -7,10 +7,7 @@ block content
                     h3.card-title.text-center Đăng nhập
                     .row
                         .col-12
-                            if errors
-                                each error in errors
-                                    .alert.alert-danger= error
-                            form(action="/auth/login", method="post")
+                            form(action="/auth", method="post")
                                 .form-group
                                         label(for="username") Tài khoản
                                         input#timeout.form-control(type="text", name="username", value= username ? username: "tuan")

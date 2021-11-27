@@ -9,5 +9,6 @@ module.exports = {
         DB_PASS: process.env.DB_PASS,
         DB_NAME: process.env.DB_NAME,
     },
-    KEY_HASH: process.env.KEY_HASH
+    KEY_HASH: process.env.KEY_HASH,
+    SESSION_SECRET: process.env.SESSION_SECRET,
 }

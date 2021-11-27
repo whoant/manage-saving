@@ -10,6 +10,7 @@ module.exports = sequelize => {
         },
         username: {
             type: DataTypes.STRING,
+            unique: true,
             allowNull: false,
         },
         password: {
@@ -23,22 +24,35 @@ module.exports = sequelize => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        phoneNumber: {
+        phone: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        dayOfBirth: {
+        birthday: {
             type: DataTypes.DATE,
             allowNull: false,
         },
         identityNumber: {
             type: DataTypes.STRING,
+            unique: true,
             allowNull: false
         },
         balance: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        },
+        address: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        sex: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
 
     });

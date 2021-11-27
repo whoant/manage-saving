@@ -76,7 +76,7 @@ module.exports.updateUser = async (req, res) => {
             });
         const staff = await Staff.findByPk(id, {raw: true});
         const listOffices = await Office.findAll({raw: true});
-       
+
         return res.render('admin/detail-user', {
             staff,
             listOffices,

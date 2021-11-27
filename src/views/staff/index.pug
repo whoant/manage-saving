@@ -1,0 +1,21 @@
+extends ../layout/main.pug
+block navbar
+    include ../layout/navbarStaff.pug
+block content
+    .row
+
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Danh sách chức năng
+                    .row
+                        .col-xl-6.col-12
+                            .card.mt-4
+                                .card-body.d-flex.flex-column
+                                    h5.card-title.text-center Khách hàng
+                                    a.btn.btn-danger(href="/staff/users") Quản lý khách hàng
+                        .col-xl-6.col-12
+                            .card.mt-4
+                                .card-body.d-flex.flex-column
+                                    h5.card-title.text-center Tài khoản tiết kiệm
+                                    a.btn.btn-success(href="/staff/accounts") Quản lý tài khoản tiết kiệm

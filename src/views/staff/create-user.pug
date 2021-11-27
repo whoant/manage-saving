@@ -1,0 +1,47 @@
+extends ../layout/main.pug
+block navbar
+    include ../layout/navbarStaff.pug
+block content
+    .row
+
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Thêm khách hàng mới
+                    .row
+                        .col-12
+
+                            form(action="/staff/users/create", method="post")
+                                .row
+                                    .form-group.col-lg-4.col-12
+                                        label(for="fullName") Họ và tên
+                                        input#fullName.form-control(type="text", name="fullName", value= fullName ? fullName: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="identityNumber") Số chứng minh thư
+                                        input#identityNumber.form-control(type="text", name="identityNumber", value= identityNumber ? identityNumber: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="username") Tài khoản
+                                        input#username.form-control(type="text", name="username", value= username ? username: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="password") Mật khẩu
+                                        input#password.form-control(type="text", name="password", value= password ? password: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="email") Email
+                                        input#email.form-control(type="email", name="email", value= email ? email: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="phone") Số điện thoại
+                                        input#phone.form-control(type="text", name="phone", value= phone ? phone: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="sex") Giới tính
+                                        select.form-control#sex(name="sex")
+                                            option(value="0") Nam
+                                            option(value="1") Nữ
+                                    .form-group.col-lg-4.col-12
+                                        label(for="address") Địa chỉ
+                                        input#address.form-control(type="text", name="address", value= address ? address: "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="birthday") Ngày sinh
+                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday: "")
+
+
+                                button.btn.btn-danger.float-right Tạo tài khoản mới

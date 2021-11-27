@@ -2,7 +2,8 @@ const {sequelize} = require('../models');
 
 module.exports = async () => {
     try {
-        await sequelize.sync({alter: true, force: false});
+        // await sequelize.sync({alter: true, force: false});
+        await sequelize.authenticate();
         console.log('Connect database successfully');
     } catch (e) {
         console.error('Connect database failed');

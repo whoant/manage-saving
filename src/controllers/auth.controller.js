@@ -1,6 +1,5 @@
-const {Staff} = require('../../models');
-
-const {hash256} = require('../../utils');
+const {hash256} = require("../utils");
+const {Staff, Office} = require("../models");
 
 module.exports.get = (req, res, next) => {
     res.render('auth/login');
@@ -8,12 +7,15 @@ module.exports.get = (req, res, next) => {
 
 module.exports.post = async (req, res, next) => {
     const {username, password} = req.body;
+
     try {
 
         const checkUser = await Staff.findOne({
             where: {
                 username
-            }
+            },
+            include: Office,
+
         });
 
         if (!checkUser || checkUser.password !== hash256(password)) {
@@ -23,14 +25,21 @@ module.exports.post = async (req, res, next) => {
                 errors: ['Vui lòng kiểm tra lại thông tin tài khoản !']
             });
         }
-        
-        res.json({
-            msg: 'OKE'
-        });
+
+        res.cookie('id', checkUser.id, {signed: true});
+
+        if (checkUser.Office.short_name === 'nhan_vien') {
+            return res.redirect('/staff')
+        }
+
     } catch (e) {
-        console.error(e);
-        res.json({
-            msg: 'Loi'
-        });
+        console.log(e);
     }
 };
+
+
+module.exports.delete = async (req, res) => {
+    console.log(req);
+    res.clearCookie('id');
+    res.redirect('/auth');
+}

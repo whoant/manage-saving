@@ -9,5 +9,5 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
                         a.nav-link(href='/admin/user') Nhân viên
                     li.nav-item
                         a.nav-link(href='/admin/office') Chức vụ
-                form.form-inline.my-2.my-lg-0
-                    a.btn.btn-outline-success.my-2.my-sm-0(href='/auth/logout') Đăng xuất
+                form.form-inline.my-2.my-lg-0(action="/auth?_method=DELETE", method="post")
+                    button.btn.btn-outline-success.my-2.my-sm-0 Đăng xuất
