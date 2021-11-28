@@ -1,0 +1,20 @@
+extends ../layout/main.pug
+block navbar
+    include ../layout/navbarManager.pug
+block content
+    .row
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Danh sách chức năng
+                    .row
+                        .col-xl-6.col-12
+                            .card.mt-4
+                                .card-body.d-flex.flex-column
+                                    h5.card-title.text-center Lãi suất
+                                    a.btn.btn-danger(href="/manager/interest") Quản lí lãi suất
+                        .col-xl-6.col-12
+                            .card.mt-4
+                                .card-body.d-flex.flex-column
+                                    h5.card-title.text-center Kì hạn
+                                    a.btn.btn-success(href="/manager/periods") Quản lý kì hạn

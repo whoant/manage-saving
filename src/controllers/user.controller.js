@@ -4,7 +4,9 @@ const {formatDate, hash256} = require("../utils");
 
 module.exports.get = async (req, res, next) => {
     const {user} = res.locals;
-    const listCustomer = await Customer.findAll();
+    const listCustomer = await Customer.findAll({
+        order: [["createdAt", "DESC"]]
+    });
     res.render('staff/users', {name: user.name, listCustomer});
 };
 

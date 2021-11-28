@@ -31,6 +31,9 @@ module.exports.post = async (req, res, next) => {
         if (checkUser.Office.short_name === 'nhan_vien') {
             return res.redirect('/staff')
         }
+        if (checkUser.Office.short_name === 'giam_doc') {
+            return res.redirect('/manager')
+        }
 
     } catch (e) {
         console.log(e);

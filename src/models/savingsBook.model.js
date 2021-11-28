@@ -9,11 +9,11 @@ module.exports = sequelize => {
             defaultValue: Sequelize.UUIDV4
         },
         deposit: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         interest: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         accountType: {
@@ -24,11 +24,6 @@ module.exports = sequelize => {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
-        },
-        createdDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.NOW
         },
         expirationDate: {
             type: DataTypes.DATE,

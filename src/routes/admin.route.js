@@ -14,7 +14,6 @@ route.get('/user/create', adminController.createUser.get);
 
 route.post('/user/create', adminController.createUser.post);
 
-
 route.get('/office', adminController.office.get);
 
 route.get('/office/create', adminController.createOffice.get);
