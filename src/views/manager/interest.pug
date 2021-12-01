@@ -1,0 +1,58 @@
+extends ../layout/main.pug
+
+mixin list(stt, interest)
+    tr
+        th(scope='row')= stt
+        td= interest.name
+        td= interest.factor
+        td= interest.Period.name
+        td= interest.created
+
+
+block navbar
+    include ../layout/navbarManager.pug
+block content
+    .row.mt-4
+        .col-6
+            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#add-periods-modal', data-id= id) Thêm lãi suất mới
+
+        .col-12.mt-2
+            table.table.table-bordered.text-center
+                thead
+                    tr
+                        th(scope='col', width='2%') #
+                        th(scope='col') Tên lãi suất
+                        th(scope='col') Hệ số
+                        th(scope='col') Loại kì hạn
+                        th(scope='col') Ngày tạo
+                tbody
+                    if interests
+                        - var x = 1
+                        each interest in interests
+                            +list(x++, interest)
+
+
+    #add-periods-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                form(action="/manager/interest", method="post")
+                    .modal-header
+                        h5#exampleModalLabel.modal-title Thêm lãi suất mới
+                        button.close(type='button' data-dismiss='modal' aria-label='Close')
+                            span(aria-hidden='true') &times;
+                    .modal-body
+                        .form-group
+                            label(for="name") Tên lãi suất
+                            input#name.form-control(type="text", name="name", value= name ? name: "")
+                        .form-group
+                            label(for="factor") Hệ số lãi suất / năm
+                            input#factor.form-control(type="text", name="factor", value= factor ? factor: "")
+                        .form-group
+                            label(for="periodId") Loại kì hạn
+                            select.form-control#periodId(name="periodId")
+                                if periods
+                                    each period in periods
+                                        option(value= period.id)= period.name
+                    .modal-footer
+                        button.btn.btn-danger#btn-add-periods(type='submit') Thêm
+                        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng

@@ -13,7 +13,7 @@ module.exports = sequelize => {
             allowNull: false
         },
         factor: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false
         }
     })

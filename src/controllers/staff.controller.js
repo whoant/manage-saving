@@ -10,5 +10,5 @@ module.exports.post = (req, res, next) => {
 };
 
 module.exports.put = (req, res, next) => {
-    
+
 }

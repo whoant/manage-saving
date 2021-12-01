@@ -1,0 +1,49 @@
+extends ../layout/main.pug
+
+mixin list(stt, period)
+    tr
+        th(scope='row')= stt
+        td= period.name
+        td= period.month
+
+
+block navbar
+    include ../layout/navbarManager.pug
+block content
+    .row.mt-4
+        .col-6
+            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#add-periods-modal', data-id= id) Thêm kì hạn mới
+
+        .col-12.mt-2
+            table.table.table-bordered.text-center
+                thead
+                    tr
+                        th(scope='col', width='2%') #
+                        th(scope='col') Tên kì hạn
+                        th(scope='col') Tháng
+
+                tbody
+                    if periods
+                        - var x = 1
+                        each period in periods
+                            +list(x++, period)
+
+
+    #add-periods-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                form(action="/manager/periods", method="post")
+                    .modal-header
+                        h5#exampleModalLabel.modal-title Thêm kì hạn mới
+                        button.close(type='button' data-dismiss='modal' aria-label='Close')
+                            span(aria-hidden='true') &times;
+                    .modal-body
+                        .form-group.col-12
+                            label(for="name") Tên kì hạn
+                            input#name.form-control(type="text", name="name", value= name ? name: "")
+                        .form-group.col-12
+                            label(for="month") Tháng
+                            input#month.form-control(type="text", name="month", value= month ? month: "")
+                    .modal-footer
+                        button.btn.btn-danger#btn-add-periods(type='submit') Thêm
+                        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
