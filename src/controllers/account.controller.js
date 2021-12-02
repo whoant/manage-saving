@@ -133,7 +133,6 @@ module.exports.createAccount = async (req, res, next) => {
         deposit = Number(deposit);
         let interest = deposit * periodCurrent.Interests.factor / 100 / 12 * periodCurrent.month;
         accountType = Number(accountType);
-        const state = STATE_ACCOUNT.PENDING;
         const customerId = id_user;
         const interestId = interest_id;
         const expirationDate = moment().add(periodCurrent.month, 'M').toDate();
@@ -143,7 +142,6 @@ module.exports.createAccount = async (req, res, next) => {
             deposit,
             interest,
             accountType,
-            state,
             expirationDate,
             closingDate,
             customerId,
@@ -152,6 +150,39 @@ module.exports.createAccount = async (req, res, next) => {
         await SavingsBook.create(newSavingBook);
 
         res.redirect(`/staff/accounts/${id_user}`);
+
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+module.exports.getDetailAccount = async (req, res, next) => {
+    const {id_user, id_account} = req.params;
+    try {
+        const infoAccount = await SavingsBook.findOne({
+            where: {
+                customerId: id_user,
+                id: id_account
+            },
+            include: [
+                {model: Customer},
+                {model: Interest, include: [{model: Period}]}
+            ],
+            nest: true,
+            raw: true
+        });
+
+        infoAccount.deposit = formatMoney(infoAccount.deposit);
+        infoAccount.interest = formatMoney(infoAccount.interest);
+        infoAccount.createdAt = formatDateVN(infoAccount.createdAt);
+        infoAccount.expirationDate = formatDateVN(infoAccount.expirationDate);
+        infoAccount.accountTypeMessage = ONLINE_SAVING_MESSAGE[infoAccount.accountType - 1];
+        infoAccount.closingDate = formatDateVN(infoAccount.closingDate);
+        if (infoAccount.state === STATE_ACCOUNT.PENDING) {
+            infoAccount.closingDate = 'Chưa kết thúc'
+        }
+
+        res.render('account/detail-account', infoAccount);
 
     } catch (e) {
         console.log(e);
