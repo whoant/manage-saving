@@ -1,13 +1,35 @@
-const {Customer} = require('../models');
-const {formatDate, hash256} = require("../utils");
+const {Customer, SavingsBook} = require('../models');
+const {formatDate, hash256, covertPlainObject, formatMoney} = require("../utils");
+
+const STATE_ACCOUNT = require('../config/stateAccount');
 
 
 module.exports.get = async (req, res, next) => {
     const {user} = res.locals;
     const listCustomer = await Customer.findAll({
-        order: [["createdAt", "DESC"]]
+        order: [["createdAt", "DESC"]],
+        include: SavingsBook
     });
-    res.render('staff/users', {name: user.name, listCustomer});
+
+    const plainListCustomer = [];
+    covertPlainObject(listCustomer).forEach(customer => {
+        let total = 0;
+        let amount = 0;
+        customer.SavingsBooks.forEach(book => {
+            if (book.state === STATE_ACCOUNT.PENDING) {
+                amount += book.deposit
+                total += 1
+            }
+        });
+        plainListCustomer.push({
+            ...customer,
+            total,
+            amount: formatMoney(amount),
+            balance: formatMoney(customer.balance)
+        });
+    });
+
+    res.render('staff/users', {name: user.name, listCustomer: plainListCustomer});
 };
 
 module.exports.create = (req, res, next) => {
@@ -23,9 +45,7 @@ module.exports.createUser = async (req, res, next) => {
             throw new Error('Vui lòng nhập đủ thông tin !');
 
         }
-
         req.body.password = hash256(req.body.password);
-
         await Customer.create(req.body);
         const listCustomer = await Customer.findAll();
         res.render('staff/users', {

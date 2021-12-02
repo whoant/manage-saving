@@ -14,6 +14,20 @@ module.exports.formatDate = (time) => {
     return `${year}-${month}-${day}`;
 };
 
+module.exports.formatDateVN = (time) => {
+    const date = new Date(time);
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (month < 10) month = '0' + month;
+    if (day < 10) day = '0' + day;
+    return `${day}-${month}-${year}`;
+};
+
 module.exports.covertPlainObject = (objORM) => {
     return objORM.map(obj => obj.get({plain: true}));
+};
+
+module.exports.formatMoney = money => {
+    return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(money);
 };

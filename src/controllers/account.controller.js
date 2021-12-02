@@ -1,31 +1,57 @@
 const moment = require('moment');
 
 const {Customer, SavingsBook, Interest, Period} = require('../models');
-const {covertPlainObject} = require("../utils");
+const {covertPlainObject, formatDateVN, formatMoney} = require("../utils");
 const ONLINE_SAVING = require('../config/onlineSaving');
 const STATE_ACCOUNT = require('../config/stateAccount');
 
+const STATE_ACCOUNT_MESSAGE = [
+    'Trong hạn',
+    'Đúng hạn',
+    'Tất toán sớm'
+];
+const ONLINE_SAVING_MESSAGE = [
+    'Nhận lãi. Gửi gốc sang kỳ hạn mới',
+    'Gửi cả gốc và lãi sang kì hạn mới',
+    'Đóng tài khoản. Nhận cả gốc và lãi'
+];
 
 module.exports.index = async (req, res, next) => {
-    
+
 };
 
 module.exports.show = async (req, res, next) => {
     const {id_user} = req.params;
 
     try {
-        const geAccountsOfUser = await Customer.findOne({
+        const infoUser = await Customer.findOne({
             where: {
                 id: id_user
-            },
-            include: 'SavingsBooks',
-            raw: true,
-            nest: true
+            }
         });
-        if (!geAccountsOfUser) {
+
+        const getAccountsOfUser = await SavingsBook.findAll({
+            where: {
+                customerId: id_user
+            },
+        });
+        if (!getAccountsOfUser) {
             return res.redirect('/staff/users');
         }
-        res.render('account/show', {geAccountsOfUser});
+
+        const accountsRender = covertPlainObject(getAccountsOfUser).map(account => {
+            return {
+                ...account,
+                deposit: formatMoney(account.deposit),
+                interest: formatMoney(account.interest),
+                expirationDate: formatDateVN(account.expirationDate),
+                createdDate: formatDateVN(account.createdAt),
+                stateMessage: STATE_ACCOUNT_MESSAGE[account.state - 1],
+                accountTypeMessage: ONLINE_SAVING_MESSAGE[account.accountType - 1]
+            };
+        });
+
+        res.render('account/show', {infoUser, accounts: accountsRender});
 
     } catch (e) {
         console.error(e);
@@ -105,7 +131,7 @@ module.exports.createAccount = async (req, res, next) => {
         const periodCurrent = listPeriodsRender[indexInterest];
 
         deposit = Number(deposit);
-        let interest = deposit * periodCurrent.Interests.factor / 100 * periodCurrent.month;
+        let interest = deposit * periodCurrent.Interests.factor / 100 / 12 * periodCurrent.month;
         accountType = Number(accountType);
         const state = STATE_ACCOUNT.PENDING;
         const customerId = id_user;

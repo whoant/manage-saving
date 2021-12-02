@@ -7,8 +7,9 @@ mixin list(stt, customer)
             a(href='/staff/users/' + customer.id + '/edit')= customer.identityNumber
         td= customer.fullName
         td= customer.balance
+        td= customer.amount
         td
-            a(href='/staff/accounts/' + customer.id)= 0
+            a(href='/staff/accounts/' + customer.id)= customer.total
 
 block navbar
     include ../layout/navbarStaff.pug
@@ -25,9 +26,10 @@ block content
                 thead
                     tr
                         th(scope='col', width='2%') #
-                        th(scope='col', width='30%') Chứng minh thư
-                        th(scope='col', width='30%') Tên
+                        th(scope='col') Chứng minh thư
+                        th(scope='col') Tên
                         th(scope='col') Số dư
+                        th(scope='col') Số dư tiết kiệm
                         th(scope='col') Tài khoản hiện hữu
                 tbody
                     if listCustomer

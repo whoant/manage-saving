@@ -1,25 +1,45 @@
 extends ../layout/main.pug
 
-mixin list(stt, customer)
-    tr
-        th(scope='row')= stt
-        td
-            a(href='/staff/users/' + customer.id + '/edit')= customer.identityNumber
-        td= customer.fullName
-        td= customer.balance
-        td
-            a(href='/staff/accounts/' + customer.id)= 0
+mixin list(stt, account)
+        tr#table-primary
+            th(scope='row')= stt
+            td
+                a(href='/staff/accounts/' + infoUser.id + '/detail/' + account.id)= account.id
+            td= account.deposit
+            td= account.interest
+            td= account.accountTypeMessage
+            td= account.stateMessage
+            td= account.createdDate
+            td= account.expirationDate
+
 
 block navbar
     include ../layout/navbarStaff.pug
 block content
     .row.mt-4
         .col-6
-            a.btn.btn-warning(href='/staff/accounts/' + geAccountsOfUser.id + '/create') Thêm tài khoản tiết kiệm mới
+            a.btn.btn-warning(href='/staff/accounts/' + infoUser.id + '/create') Thêm tài khoản tiết kiệm mới
         .col-6
             form(action="/staff/users", method="get")
                 .form-group
-                    input#name.form-control(type="text", name="search", placeholder="Nhập chứng minh thư", value= search ? search: "")
+                    input#name.form-control(type="text", name="search", placeholder="Nhập số tài khoản", value= search ? search: "")
+        .col-12
+            .card.mt-2
+                .card-body
+                    h3.card-title.text-center Thông tin khách hàng
+                    .row
+                        .col-12
+                            .row
+                                .form-group.col-lg-4.col-12
+                                    label(for="fullName") Họ và tên
+                                    input#fullName.form-control(type="text", name="fullName", value= infoUser.fullName, disabled)
+                                .form-group.col-lg-4.col-12
+                                    label(for="identityNumber") Số chứng minh thư
+                                    input#identityNumber.form-control(type="text", name="identityNumber", value= infoUser.identityNumber, disabled)
+                                .form-group.col-lg-4.col-12
+                                    label(for="username") Tài khoản
+                                    input#username.form-control(type="text", name="username", value= infoUser.username, disabled)
+
         .col-12.mt-2
             table.table.table-bordered.text-center
                 thead
@@ -28,47 +48,12 @@ block content
                         th(scope='col') Số tài khoản
                         th(scope='col') Tiền gửi
                         th(scope='col') Tiền lãi
-                        th(scope='col') Tổng tiền sau lãi
                         th(scope='col') Loại tiết kiệm
+                        th(scope='col') Trạng thái
                         th(scope='col') Ngày mở
-                        th(scope='col') Ngày hết hạn
+                        th(scope='col') Ngày đến hạn
                 tbody
-                    if listCustomer
+                    if accounts
                         - var x = 1
-                        each customer in listCustomer
-                            +list(x++, customer)
-
-
-    #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
-        .modal-dialog(role='document')
-            .modal-content
-                .modal-header
-                    h5#exampleModalLabel.modal-title Xoá người dùng ?
-                    button.close(type='button' data-dismiss='modal' aria-label='Close')
-                        span(aria-hidden='true') &times;
-                .modal-body
-                    | Bạn chắc chắn xoá người dùng này chứ ?
-                .modal-footer
-                    button.btn.btn-danger#btn-delete-user(type='button') Xoá bỏ
-                    button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
-
-    //- Form delete user
-    form(method="post", name="form-delete-user", style="display: none;")
-
-
-    script.
-        document.addEventListener('DOMContentLoaded', () => {
-            const deleteForm = document.forms['form-delete-user'];
-            let idUser = null;
-
-            $('#delete-user-modal').on('show.bs.modal', (event) => {
-                const button = $(event.relatedTarget);
-                idUser = button.data('id');
-            });
-
-            document.getElementById('btn-delete-user').addEventListener('click', () => {
-                deleteForm.action = '/staff/users/' + idUser  + '?_method=DELETE';
-                deleteForm.submit();
-            });
-
-        });
+                        each account in accounts
+                            +list(x++, account)

@@ -79,6 +79,6 @@ block content
         }
 
         function calMoney(){
-            let money = text * periodCurrent.Interests.factor / 100 * periodCurrent.month;
+            let money = text * periodCurrent.Interests.factor / 100 / 12 * periodCurrent.month ;
             return money;
         }
