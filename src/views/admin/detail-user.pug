@@ -19,10 +19,6 @@ block content
                                         label(for="username") Tài khoản
                                         input#username.form-control(type="text", name="username", value= staff.username, disabled)
                                     .form-group.col-lg-4.col-12
-                                        label(for="password") Mật khẩu
-                                        input#password.form-control(type="password", name="password")
-                                .row
-                                    .form-group.col-lg-4.col-12
                                         label(for="email") Email
                                         input#email.form-control(type="text", name="email", value= staff.email)
                                     .form-group.col-lg-4.col-12
@@ -37,7 +33,7 @@ block content
                                             else
                                                 option(value="1", selected) Nữ
                                                 option(value="0") Nam
-                                .row
+
                                     .form-group.col-lg-4.col-12
                                         label(for="address") Địa chỉ
                                         input#address.form-control(type="text", name="address", value= staff.address)
@@ -52,6 +48,5 @@ block content
                                                         option(value= office.id, selected)= office.name
                                                     else
                                                         option(value= office.id)= office.name
-
-
+                                button.btn.btn-primary Reset mật khẩu
                                 button.btn.btn-danger.float-right Cập nhập thông tin nhân viên

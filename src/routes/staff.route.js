@@ -19,6 +19,8 @@ route.put('/users/:id_user', userController.put);
 
 route.get('/accounts/:id_user', accountController.show);
 
-route.get('/accounts/:id_user/create', accountController.createAccount);
+route.get('/accounts/:id_user/create', accountController.indexAccount);
+
+route.post('/accounts/:id_user/create', accountController.createAccount);
 
 module.exports = route;

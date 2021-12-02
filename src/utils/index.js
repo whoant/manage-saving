@@ -13,3 +13,7 @@ module.exports.formatDate = (time) => {
     if (day < 10) day = '0' + day;
     return `${year}-${month}-${day}`;
 };
+
+module.exports.covertPlainObject = (objORM) => {
+    return objORM.map(obj => obj.get({plain: true}));
+};

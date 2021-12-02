@@ -67,7 +67,6 @@ FormCreate.belongsTo(Staff, {
     foreignKey: 'staffId'
 });
 
-
 Staff.hasMany(FormClose, {
     foreignKey: 'staffId'
 });
@@ -83,7 +82,6 @@ FormClose.belongsTo(SavingsBook, {
 SavingsBook.hasOne(FormClose, {
     foreignKey: 'savingsBookId'
 });
-
 
 Period.hasMany(Interest, {
     foreignKey: 'periodId'

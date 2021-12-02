@@ -6,41 +6,79 @@ block content
         .col-xl-12.col.md-12.col-12
             .card.mt-5
                 .card-body
-                    h3.card-title.text-center Thêm tài khoản mới : #{name}
+                    h3.card-title.text-center Thông tin khách hàng
                     .row
                         .col-12
-
-                            form(action="/staff/users/create", method="post")
                                 .row
+
                                     .form-group.col-lg-4.col-12
-                                        label(for="fullName") Họ và tên
-                                        input#fullName.form-control(type="text", name="fullName", value= fullName ? fullName: "")
+                                        label(for="fullName") Họ tên
+                                        input#fullName.form-control(type="text", name="fullName", value= getAccountsOfUser.fullName, disabled)
                                     .form-group.col-lg-4.col-12
                                         label(for="identityNumber") Số chứng minh thư
-                                        input#identityNumber.form-control(type="text", name="identityNumber", value= identityNumber ? identityNumber: "")
+                                        input#identityNumber.form-control(type="text", name="identityNumber", value= getAccountsOfUser.identityNumber, disabled)
                                     .form-group.col-lg-4.col-12
                                         label(for="username") Tài khoản
-                                        input#username.form-control(type="text", name="username", value= username ? username: "")
+                                        input#username.form-control(type="text", name="username", value= getAccountsOfUser.username, disabled)
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Thêm tài khoản tiết kiệm mới
+                    .row
+                        .col-12
+                            form(action="/staff/accounts/" + getAccountsOfUser.id + "/create", method="post")
+                                .row
+                                    input#id_user.form-control(type="hidden", name="id_user", value= getAccountsOfUser.id)
                                     .form-group.col-lg-4.col-12
-                                        label(for="password") Mật khẩu
-                                        input#password.form-control(type="text", name="password", value= password ? password: "")
+                                        label(for="deposit") Số tiền
+                                        input#deposit.form-control(type="number", name="deposit", value= deposit ? deposit: "")
                                     .form-group.col-lg-4.col-12
-                                        label(for="email") Email
-                                        input#email.form-control(type="email", name="email", value= email ? email: "")
+                                        label(for="interest_id") Kỳ hạn
+                                        select.form-control#interest_id(name="interest_id")
+                                            if listPeriodsRender
+                                                each period in listPeriodsRender
+                                                    option(value= period.Interests.id)= period.name + " |  " + period.Interests.factor + " % năm"
                                     .form-group.col-lg-4.col-12
-                                        label(for="phone") Số điện thoại
-                                        input#phone.form-control(type="text", name="phone", value= phone ? phone: "")
+                                        label(for="interest-money") Tiền lãi
+                                        input#interest-money.form-control(type="text", name="interest-money", disabled)
                                     .form-group.col-lg-4.col-12
-                                        label(for="sex") Giới tính
-                                        select.form-control#sex(name="sex")
-                                            option(value="0") Nam
-                                            option(value="1") Nữ
-                                    .form-group.col-lg-4.col-12
-                                        label(for="address") Địa chỉ
-                                        input#address.form-control(type="text", name="address", value= address ? address: "")
-                                    .form-group.col-lg-4.col-12
-                                        label(for="birthday") Ngày sinh
-                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday: "")
+                                        label(for="accountType") Loại tài khoản
+                                        select.form-control#accountType(name="accountType")
+                                            option(value=1) Nhận lãi. Gửi gốc sang kỳ hạn mới
+                                            option(value=2) Gửi cả gốc và lãi sang kì hạn mới
+                                            option(value=3) Đóng tài khoản. Nhận cả gốc và lãi
 
+                                button.btn.btn-danger.float-right Tạo tài khoản tiết kiệm
+    script.
+        let indexPeriod = 0;
+        const a = !{JSON.stringify(listPeriodsRender)};
+        let text = '';
+        let periodCurrent = a[0];
 
-                                button.btn.btn-danger.float-right Tạo tài khoản mới
+        document.addEventListener('DOMContentLoaded', () => {
+
+            $("#deposit").on('input', function(e){
+                text = this.value;
+                let value = formatMoney(text);
+                $('label[for="deposit"]').text(`Số tiền : ${value}`);
+                let money = calMoney();
+                $('#interest-money').val(formatMoney(money));
+            });
+
+            $('#interest_id').on('change', function(){
+                indexPeriod = a.findIndex(ele => ele.Interests.id === this.value);
+                periodCurrent = a[indexPeriod];
+                let money = calMoney()
+                $('#interest-money').val(formatMoney(money));
+            });
+
+        });
+
+        function formatMoney(text) {
+            let value = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(text);
+            return value;
+        }
+
+        function calMoney(){
+            let money = text * periodCurrent.Interests.factor / 100 * periodCurrent.month;
+            return money;
+        }
