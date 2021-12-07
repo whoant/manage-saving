@@ -25,4 +25,6 @@ route.post('/accounts/:id_user/create', accountController.createAccount);
 
 route.get('/accounts/:id_user/detail/:id_account', accountController.getDetailAccount);
 
+route.put('/accounts/:id_user/detail/:id_account', accountController.putDetailAccount);
+
 module.exports = route;

@@ -25,6 +25,7 @@ block content
                         h3.card-title.text-center Thông tin chi tiết tài khoản
                         .row
                             .col-12
+                                form(action="/staff/accounts/" + customer + "/create", method="post")
                                     .row
                                         .form-group.col-lg-4.col-12
                                             label(for="account_id") Số tài khoản
@@ -53,4 +54,26 @@ block content
                                         .form-group.col-lg-4.col-12
                                             label(for="closingDate") Ngày đóng
                                             input#closingDate.form-control(type="text", name="closingDate", value= closingDate, disabled)
+                                    if state == 1
+                                        a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id) Đáo hạn sớm
+    #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5#exampleModalLabel.modal-title Nhắc nhở ?
+                        button.close(type='button' data-dismiss='modal' aria-label='Close')
+                            span(aria-hidden='true') &times;
+                    .modal-body
+                        | Bạn có muốn đáo hạn tài khoản này không ?
+                    .modal-footer
+                        button.btn.btn-danger#btn-delete-user(type='button') Đồng ý
+                        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+    form(method="post", id="form-delete-user", style="display: none;", action='/staff/accounts/' + Customer.id + '/detail/' +id+'?_method=PUT')
+    script.
+            document.addEventListener('DOMContentLoaded', () => {
 
+                document.getElementById('btn-delete-user').addEventListener('click', () => {
+                    $('#form-delete-user').submit();
+                });
+
+            });

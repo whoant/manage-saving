@@ -1,5 +1,5 @@
 const {Period, Interest} = require('../models/index');
-const {formatDate} = require("../utils");
+const {formatDateVN} = require("../utils");
 
 module.exports.index = async (req, res, next) => {
     const {user} = res.locals;
@@ -18,9 +18,9 @@ module.exports.indexInterest = async (req, res, next) => {
 
         const interestsRender = interests.map(interest => {
             const {createdAt} = interest;
-            return {...interest, created: formatDate(createdAt)};
+            return {...interest, created: formatDateVN(createdAt)};
         });
-        
+
         res.render('manager/interest', {
             periods,
             interests: interestsRender

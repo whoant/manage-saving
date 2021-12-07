@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-const {Customer, SavingsBook, Interest, Period} = require('../models');
+const {Customer, SavingsBook, Interest, Period, FormCreate, FormClose} = require('../models');
 const {covertPlainObject, formatDateVN, formatMoney} = require("../utils");
 const ONLINE_SAVING = require('../config/onlineSaving');
 const STATE_ACCOUNT = require('../config/stateAccount');
@@ -22,6 +22,7 @@ module.exports.index = async (req, res, next) => {
 
 module.exports.show = async (req, res, next) => {
     const {id_user} = req.params;
+    const {user} = res.locals;
 
     try {
         const infoUser = await Customer.findOne({
@@ -34,6 +35,7 @@ module.exports.show = async (req, res, next) => {
             where: {
                 customerId: id_user
             },
+            order: [['createdAt', 'DESC']],
         });
         if (!getAccountsOfUser) {
             return res.redirect('/staff/users');
@@ -51,7 +53,7 @@ module.exports.show = async (req, res, next) => {
             };
         });
 
-        res.render('account/show', {infoUser, accounts: accountsRender});
+        res.render('account/show', {infoUser, accounts: accountsRender, name: user.name});
 
     } catch (e) {
         console.error(e);
@@ -95,7 +97,7 @@ module.exports.indexAccount = async (req, res, next) => {
 
 module.exports.createAccount = async (req, res, next) => {
     let {id_user, interest_id, deposit, accountType} = req.body;
-
+    const {user} = res.locals;
     try {
         if (accountType < ONLINE_SAVING.INTEREST_RECEIVER && accountType > ONLINE_SAVING.CLOSING_ACCOUNT) {
             return res.redirect('back');
@@ -138,7 +140,7 @@ module.exports.createAccount = async (req, res, next) => {
         const expirationDate = moment().add(periodCurrent.month, 'M').toDate();
         const closingDate = expirationDate;
 
-        const newSavingBook = {
+        const newSavingBook = await SavingsBook.create({
             deposit,
             interest,
             accountType,
@@ -146,8 +148,12 @@ module.exports.createAccount = async (req, res, next) => {
             closingDate,
             customerId,
             interestId
-        }
-        await SavingsBook.create(newSavingBook);
+        });
+
+        await FormCreate.create({
+            savingsBookId: newSavingBook.id,
+            staffId: user.id
+        });
 
         res.redirect(`/staff/accounts/${id_user}`);
 
@@ -158,12 +164,14 @@ module.exports.createAccount = async (req, res, next) => {
 
 module.exports.getDetailAccount = async (req, res, next) => {
     const {id_user, id_account} = req.params;
+    const {user} = res.locals;
     try {
         const infoAccount = await SavingsBook.findOne({
             where: {
                 customerId: id_user,
                 id: id_account
             },
+
             include: [
                 {model: Customer},
                 {model: Interest, include: [{model: Period}]}
@@ -181,8 +189,49 @@ module.exports.getDetailAccount = async (req, res, next) => {
         if (infoAccount.state === STATE_ACCOUNT.PENDING) {
             infoAccount.closingDate = 'Chưa kết thúc'
         }
+        infoAccount.name = user.name;
 
         res.render('account/detail-account', infoAccount);
+
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+module.exports.putDetailAccount = async (req, res, next) => {
+    const {id_user, id_account} = req.params;
+    const {user} = res.locals;
+    try {
+        const infoAccount = await SavingsBook.findOne({
+            where: {
+                customerId: id_user,
+                id: id_account
+            },
+            include: [
+                {model: Customer},
+                {model: Interest, include: [{model: Period}]}
+            ],
+        });
+
+        if (!infoAccount || infoAccount.state !== STATE_ACCOUNT.PENDING) {
+            return res.redirect('back');
+        }
+
+        await infoAccount.update({
+            state: STATE_ACCOUNT.ON_TIME,
+            closingDate: moment().toDate()
+        });
+
+        await FormClose.create({
+            staffId: user.id,
+            savingsBookId: id_account
+        });
+
+        await infoAccount.Customer.increment({
+            balance: infoAccount.deposit
+        });
+
+        res.redirect('back');
 
     } catch (e) {
         console.log(e);

@@ -98,6 +98,7 @@ module.exports.show = async (req, res, next) => {
 
 module.exports.put = async (req, res, next) => {
     const {id_user} = req.params;
+    const {user} = res.locals;
     const {fullName, identityNumber, username, email, phone, sex, address, birthday} = req.body;
 
     try {
@@ -106,17 +107,38 @@ module.exports.put = async (req, res, next) => {
             throw new Error('Vui lòng nhập đủ thông tin !');
         }
         const body = {...req.body};
-        // body.password = hash256(body.password);
 
         await Customer.update(body, {
             where: {
                 id: id_user
             }
         });
-        const listCustomer = await Customer.findAll();
+
+        const listCustomer = await Customer.findAll({
+            order: [["createdAt", "DESC"]],
+            include: SavingsBook
+        });
+        const plainListCustomer = [];
+        covertPlainObject(listCustomer).forEach(customer => {
+            let total = 0;
+            let amount = 0;
+            customer.SavingsBooks.forEach(book => {
+                if (book.state === STATE_ACCOUNT.PENDING) {
+                    amount += book.deposit
+                    total += 1
+                }
+            });
+            plainListCustomer.push({
+                ...customer,
+                total,
+                amount: formatMoney(amount),
+                balance: formatMoney(customer.balance)
+            });
+        });
+
         res.render('staff/users', {
             msg: "Cập nhập thông tin khách hàng thành công !",
-            listCustomer
+            name: user.name, listCustomer: plainListCustomer
         });
     } catch (e) {
         console.error(e);
