@@ -1,24 +1,34 @@
-const {Office, Staff} = require("../../models");
-const {hash256} = require("../../utils");
+const { Office, Staff } = require('../../models');
+const { hash256 } = require('../../utils');
 
 module.exports.get = async (req, res) => {
     try {
         const listOffices = await Office.findAll({
             attributes: ['id', 'name'],
-            raw: true
+            raw: true,
         });
 
         if (listOffices.length === 0) return res.redirect('back');
 
-        res.render('admin/create-user', {listOffices, officeId: 0});
+        res.render('admin/create-user', { listOffices, officeId: 0 });
     } catch (e) {
         console.error(e);
     }
 };
 
 module.exports.post = async (req, res) => {
-    const {name, username, password, email, phone, sex, birthday, officeId, address} = req.body
-    if (!name || !username || !password || !email || !phone || !sex || !birthday || !officeId || !address) {
+    const { name, username, password, email, phone, sex, birthday, officeId, address } = req.body;
+    if (
+        !name ||
+        !username ||
+        !password ||
+        !email ||
+        !phone ||
+        !sex ||
+        !birthday ||
+        !officeId ||
+        !address
+    ) {
         throw new Error('Vui lòng nhập đủ thông tin !');
     }
     try {
@@ -31,7 +41,7 @@ module.exports.post = async (req, res) => {
             sex,
             birthday,
             officeId,
-            address
+            address,
         });
 
         res.redirect('/admin/user');
@@ -39,20 +49,18 @@ module.exports.post = async (req, res) => {
         let error = e.message;
         const listOffices = await Office.findAll({
             attributes: ['id', 'name'],
-            raw: true
+            raw: true,
         });
 
-
         if (e.name === 'SequelizeUniqueConstraintError') {
-            error = 'Tên tài khoản đã tồn tại !'
+            error = 'Tên tài khoản đã tồn tại !';
         }
 
         return res.render('admin/create-user', {
             ...req.body,
             listOffices,
             errors: [error],
-            officeId
+            officeId,
         });
-
     }
 };

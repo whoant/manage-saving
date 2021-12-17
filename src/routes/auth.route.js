@@ -4,6 +4,6 @@ const route = express.Router();
 
 route.get('/', authController.get);
 route.post('/', authController.post);
-route.delete('/', authController.delete)
+route.delete('/', authController.delete);
 
 module.exports = route;

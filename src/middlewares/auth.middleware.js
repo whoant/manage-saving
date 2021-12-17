@@ -1,7 +1,7 @@
-const {Staff, Office} = require("../models");
+const { Staff, Office } = require('../models');
 
 module.exports.requireAuth = async (req, res, next) => {
-    const {id} = req.signedCookies;
+    const { id } = req.signedCookies;
     if (!id) {
         return res.redirect('/auth');
     }
@@ -9,7 +9,7 @@ module.exports.requireAuth = async (req, res, next) => {
     try {
         const checkUser = await Staff.findOne({
             where: {
-                id
+                id,
             },
             include: Office,
             raw: true,
@@ -22,20 +22,17 @@ module.exports.requireAuth = async (req, res, next) => {
 
         res.locals.user = checkUser;
         next();
-
-    } catch (e) {
-
-    }
+    } catch (e) {}
 };
 
 module.exports.requirePermissions = (permissions) => {
     return (req, res, next) => {
-        const {Office} = res.locals.user;
+        const { Office } = res.locals.user;
 
         if (Office.short_name === permissions) {
             return next();
         }
 
         return res.redirect('back');
-    }
-}
+    };
+};

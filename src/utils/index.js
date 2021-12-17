@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-module.exports.hash256 = text => {
+module.exports.hash256 = (text) => {
     return crypto.createHash('sha256').update(text).digest('hex');
 };
 
@@ -25,9 +25,9 @@ module.exports.formatDateVN = (time) => {
 };
 
 module.exports.covertPlainObject = (objORM) => {
-    return objORM.map(obj => obj.get({plain: true}));
+    return objORM.map((obj) => obj.get({ plain: true }));
 };
 
-module.exports.formatMoney = money => {
-    return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(money);
+module.exports.formatMoney = (money) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
 };

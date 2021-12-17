@@ -19,5 +19,9 @@
     "pug": "^3.0.2",
     "sequelize": "^6.9.0",
     "slug": "^5.1.0"
+  },
+  "devDependencies": {
+    "exact": "^0.8.0",
+    "prettier": "^2.5.1"
   }
 }

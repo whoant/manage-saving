@@ -11,4 +11,4 @@ module.exports = {
     },
     KEY_HASH: process.env.KEY_HASH,
     SESSION_SECRET: process.env.SESSION_SECRET,
-}
+};

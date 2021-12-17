@@ -1,5 +1,5 @@
-const {DATABASE} = require('../config');
-const {Sequelize} = require("sequelize");
+const { DATABASE } = require('../config');
+const { Sequelize } = require('sequelize');
 
 const OfficeModel = require('./office.model');
 const StaffModel = require('./staff.model');
@@ -11,18 +11,18 @@ const ParameterModel = require('./parameter.model');
 const FormCreateModel = require('./formCreate.model');
 const FormCloseModel = require('./formClose.model');
 
-const {DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS} = DATABASE;
+const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS } = DATABASE;
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
     host: DB_HOST,
     port: DB_PORT,
-    dialect: "mysql",
+    dialect: 'mysql',
     logging: false,
     pool: {
         max: 10,
         min: 0,
-        idle: 10000
-    }
+        idle: 10000,
+    },
 });
 
 const Office = OfficeModel(sequelize);
@@ -36,67 +36,67 @@ const FormCreate = FormCreateModel(sequelize);
 const FormClose = FormCloseModel(sequelize);
 
 Office.hasMany(Staff, {
-    foreignKey: 'officeId'
+    foreignKey: 'officeId',
 });
 
 Staff.belongsTo(Office, {
-    foreignKey: 'officeId'
+    foreignKey: 'officeId',
 });
 
 Customer.hasMany(SavingsBook, {
-    foreignKey: 'customerId'
+    foreignKey: 'customerId',
 });
 
 SavingsBook.belongsTo(Customer, {
-    foreignKey: 'customerId'
+    foreignKey: 'customerId',
 });
 
 FormCreate.belongsTo(SavingsBook, {
-    foreignKey: 'savingsBookId'
+    foreignKey: 'savingsBookId',
 });
 
 SavingsBook.hasOne(FormCreate, {
-    foreignKey: 'savingsBookId'
+    foreignKey: 'savingsBookId',
 });
 
 Staff.hasMany(FormCreate, {
-    foreignKey: 'staffId'
+    foreignKey: 'staffId',
 });
 
 FormCreate.belongsTo(Staff, {
-    foreignKey: 'staffId'
+    foreignKey: 'staffId',
 });
 
 Staff.hasMany(FormClose, {
-    foreignKey: 'staffId'
+    foreignKey: 'staffId',
 });
 
 FormClose.belongsTo(Staff, {
-    foreignKey: 'staffId'
+    foreignKey: 'staffId',
 });
 
 FormClose.belongsTo(SavingsBook, {
-    foreignKey: 'savingsBookId'
+    foreignKey: 'savingsBookId',
 });
 
 SavingsBook.hasOne(FormClose, {
-    foreignKey: 'savingsBookId'
+    foreignKey: 'savingsBookId',
 });
 
 Period.hasMany(Interest, {
-    foreignKey: 'periodId'
+    foreignKey: 'periodId',
 });
 
 Interest.belongsTo(Period, {
-    foreignKey: 'periodId'
+    foreignKey: 'periodId',
 });
 
 Interest.hasMany(SavingsBook, {
-    foreignKey: 'interestId'
+    foreignKey: 'interestId',
 });
 
 SavingsBook.belongsTo(Interest, {
-    foreignKey: 'interestId'
+    foreignKey: 'interestId',
 });
 
 module.exports = {
@@ -109,7 +109,5 @@ module.exports = {
     Parameter,
     FormCreate,
     FormClose,
-    sequelize
+    sequelize,
 };
-
-

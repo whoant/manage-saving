@@ -1,20 +1,20 @@
-const {Sequelize, DataTypes} = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
     return sequelize.define('Interest', {
         id: {
             type: DataTypes.UUID,
             allowNull: false,
             primaryKey: true,
-            defaultValue: Sequelize.UUIDV4
+            defaultValue: Sequelize.UUIDV4,
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         factor: {
             type: DataTypes.DOUBLE,
-            allowNull: false
-        }
-    })
+            allowNull: false,
+        },
+    });
 };

@@ -1,4 +1,4 @@
-const {sequelize} = require('../models');
+const { sequelize } = require('../models');
 
 module.exports = async () => {
     try {
@@ -10,5 +10,4 @@ module.exports = async () => {
         console.error(e);
         process.exit(0);
     }
-
 };

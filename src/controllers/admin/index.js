@@ -9,5 +9,5 @@ module.exports = {
     user,
     office,
     createUser,
-    createOffice
-}
+    createOffice,
+};

@@ -1,4 +1,4 @@
-const {Staff, Office} = require('../../models');
+const { Staff, Office } = require('../../models');
 
 module.exports.get = async (req, res, next) => {
     try {
@@ -6,13 +6,12 @@ module.exports.get = async (req, res, next) => {
         const countStaff = await Staff.count();
         res.render('admin/home', {
             countOffice,
-            countStaff
+            countStaff,
         });
-
     } catch (e) {
         res.render('admin/home', {
             countOffice: 0,
-            countStaff: 0
+            countStaff: 0,
         });
     }
 };

@@ -1,15 +1,13 @@
-const express = require("express");
+const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const route = require('../routes');
-const {SESSION_SECRET} = require("../config");
-module.exports = app => {
-
-    app.use(express.urlencoded({extended: true}));
+const { SESSION_SECRET } = require('../config');
+module.exports = (app) => {
+    app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
-    
 
     app.use(methodOverride('_method'));
     app.set('view engine', 'pug');
