@@ -20,7 +20,7 @@ block content
         .col-6
             a.btn.btn-warning(href='/staff/accounts/' + infoUser.id + '/create') Thêm tài khoản tiết kiệm mới
         .col-6
-            form(action="/staff/users", method="get")
+            form(action='/staff/accounts/' + infoUser.id + '/get', method="get")
                 .form-group
                     input#name.form-control(type="text", name="search", placeholder="Nhập số tài khoản", value= search ? search: "")
         .col-12

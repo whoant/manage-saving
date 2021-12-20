@@ -27,9 +27,15 @@ block content
                             form(action="/staff/accounts/" + getAccountsOfUser.id + "/create", method="post")
                                 .row
                                     input#id_user.form-control(type="hidden", name="id_user", value= getAccountsOfUser.id)
-                                    .form-group.col-lg-4.col-12
+                                    .form-group.col-lg-6.col-12
                                         label(for="deposit") Số tiền
                                         input#deposit.form-control(type="number", name="deposit", value= deposit ? deposit: "")
+                                    .form-group.col-lg-6.col-12
+                                        label(for="accountType") Loại tài khoản
+                                        select.form-control#accountType(name="accountType")
+                                            option(value=1) Nhận lãi. Gửi gốc sang kỳ hạn mới
+                                            option(value=2) Gửi cả gốc và lãi sang kì hạn mới
+                                            option(value=3) Đóng tài khoản. Nhận cả gốc và lãi
                                     .form-group.col-lg-4.col-12
                                         label(for="interest_id") Kỳ hạn
                                         select.form-control#interest_id(name="interest_id")
@@ -40,13 +46,11 @@ block content
                                         label(for="interest-money") Tiền lãi
                                         input#interest-money.form-control(type="text", name="interest-money", disabled)
                                     .form-group.col-lg-4.col-12
-                                        label(for="accountType") Loại tài khoản
-                                        select.form-control#accountType(name="accountType")
-                                            option(value=1) Nhận lãi. Gửi gốc sang kỳ hạn mới
-                                            option(value=2) Gửi cả gốc và lãi sang kì hạn mới
-                                            option(value=3) Đóng tài khoản. Nhận cả gốc và lãi
+                                        label(for="date-end") Ngày tới hạn
+                                        input#date-end.form-control(type="text", name="date-end", disabled)
 
                                 button.btn.btn-danger.float-right Tạo tài khoản tiết kiệm
+    script(src='https://momentjs.com/downloads/moment.min.js')
     script.
         let indexPeriod = 0;
         const a = !{JSON.stringify(listPeriodsRender)};
@@ -55,6 +59,7 @@ block content
 
         document.addEventListener('DOMContentLoaded', () => {
 
+            $('#date-end').val(moment().add(a[0].month, 'M').format('DD/MM/YYYY'));
             $("#deposit").on('input', function(e){
                 text = this.value;
                 let value = formatMoney(text);
@@ -66,6 +71,7 @@ block content
             $('#interest_id').on('change', function(){
                 indexPeriod = a.findIndex(ele => ele.Interests.id === this.value);
                 periodCurrent = a[indexPeriod];
+                $('#date-end').val(moment().add(periodCurrent.month, 'M').format('DD/MM/YYYY'));
                 let money = calMoney()
                 $('#interest-money').val(formatMoney(money));
             });

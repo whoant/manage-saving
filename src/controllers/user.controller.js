@@ -1,11 +1,27 @@
 const { Customer, SavingsBook } = require('../models');
-const { formatDate, hash256, covertPlainObject, formatMoney } = require('../utils');
+const {
+    formatDate,
+    hash256,
+    covertPlainObject,
+    formatMoney,
+    randomCharacters,
+} = require('../utils');
+const mailer = require('../services/mailer');
 
 const STATE_ACCOUNT = require('../config/stateAccount');
+const { Op } = require('sequelize');
 
 module.exports.get = async (req, res, next) => {
     const { user } = res.locals;
+    let { search } = req.query;
+    search = search || '';
+
     const listCustomer = await Customer.findAll({
+        where: {
+            identityNumber: {
+                [Op.like]: `%${search}%`,
+            },
+        },
         order: [['createdAt', 'DESC']],
         include: SavingsBook,
     });
@@ -27,25 +43,23 @@ module.exports.get = async (req, res, next) => {
             balance: formatMoney(customer.balance),
         });
     });
-
-    res.render('staff/users', { name: user.name, listCustomer: plainListCustomer });
+    const messages = await req.consumeFlash('info');
+    res.render('staff/users', { name: user.name, listCustomer: plainListCustomer, messages });
 };
 
-module.exports.create = (req, res, next) => {
+module.exports.index = (req, res, next) => {
     const { user } = res.locals;
     res.render('staff/create-user', { name: user.name });
 };
 
 module.exports.createUser = async (req, res, next) => {
-    const { fullName, identityNumber, username, password, email, phone, sex, address, birthday } =
-        req.body;
+    const { fullName, identityNumber, username, email, phone, sex, address, birthday } = req.body;
 
     try {
         if (
             !fullName ||
             !identityNumber ||
             !username ||
-            !password ||
             !email ||
             !phone ||
             !sex ||
@@ -54,15 +68,17 @@ module.exports.createUser = async (req, res, next) => {
         ) {
             throw new Error('Vui lòng nhập đủ thông tin !');
         }
-        req.body.password = hash256(req.body.password);
+        const subject = 'Mật khẩu mặc định';
+        const password = randomCharacters(6);
+        const html = `Mật khẩu mặc định của bạn: <b>${password}</b>`;
+
+        await mailer(email, subject, html);
+        req.body.password = hash256(password);
         await Customer.create(req.body);
-        const listCustomer = await Customer.findAll();
-        res.render('staff/users', {
-            msg: 'Tạo khách hàng thành công !',
-            listCustomer,
-        });
+
+        await req.flash('info', 'Tạo khách hàng thành công !');
+        res.redirect('/staff/users');
     } catch (e) {
-        console.error(e);
         let error = e.message;
 
         if (e.name === 'SequelizeUniqueConstraintError') {
@@ -96,14 +112,12 @@ module.exports.show = async (req, res, next) => {
 
         res.render('staff/edit-user', { ...infoUser, birthday });
     } catch (e) {
-        console.log(e);
         return res.redirect('/staff/users');
     }
 };
 
 module.exports.put = async (req, res, next) => {
     const { id_user } = req.params;
-    const { user } = res.locals;
     const { fullName, identityNumber, username, email, phone, sex, address, birthday } = req.body;
 
     try {
@@ -128,35 +142,10 @@ module.exports.put = async (req, res, next) => {
             },
         });
 
-        const listCustomer = await Customer.findAll({
-            order: [['createdAt', 'DESC']],
-            include: SavingsBook,
-        });
-        const plainListCustomer = [];
-        covertPlainObject(listCustomer).forEach((customer) => {
-            let total = 0;
-            let amount = 0;
-            customer.SavingsBooks.forEach((book) => {
-                if (book.state === STATE_ACCOUNT.PENDING) {
-                    amount += book.deposit;
-                    total += 1;
-                }
-            });
-            plainListCustomer.push({
-                ...customer,
-                total,
-                amount: formatMoney(amount),
-                balance: formatMoney(customer.balance),
-            });
-        });
+        await req.flash('info', 'Cập nhập thông tin khách hàng thành công !');
 
-        res.render('staff/users', {
-            msg: 'Cập nhập thông tin khách hàng thành công !',
-            name: user.name,
-            listCustomer: plainListCustomer,
-        });
+        res.redirect('/staff/users');
     } catch (e) {
-        console.error(e);
         let error = e.message;
 
         if (e.name === 'SequelizeUniqueConstraintError') {

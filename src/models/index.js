@@ -10,6 +10,7 @@ const SavingsBookModel = require('./savingsBook.model');
 const ParameterModel = require('./parameter.model');
 const FormCreateModel = require('./formCreate.model');
 const FormCloseModel = require('./formClose.model');
+const VarModel = require('./var.model');
 
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS } = DATABASE;
 
@@ -34,6 +35,7 @@ const SavingsBook = SavingsBookModel(sequelize);
 const Parameter = ParameterModel(sequelize);
 const FormCreate = FormCreateModel(sequelize);
 const FormClose = FormCloseModel(sequelize);
+const Var = VarModel(sequelize);
 
 Office.hasMany(Staff, {
     foreignKey: 'officeId',
@@ -109,5 +111,6 @@ module.exports = {
     Parameter,
     FormCreate,
     FormClose,
+    Var,
     sequelize,
 };

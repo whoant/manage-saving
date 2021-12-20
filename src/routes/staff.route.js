@@ -9,9 +9,7 @@ route.get('/', staffController.get);
 
 route.get('/users', userController.get);
 
-route.get('/users/create', userController.create);
-
-route.post('/users/create', userController.createUser);
+route.route('/users/create').get(userController.index).post(userController.createUser);
 
 route.get('/users/:id_user/edit', userController.show);
 

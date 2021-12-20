@@ -11,4 +11,6 @@ module.exports = {
     },
     KEY_HASH: process.env.KEY_HASH,
     SESSION_SECRET: process.env.SESSION_SECRET,
+    MAIL_USER: process.env.MAIL_USER,
+    MAIL_PASS: process.env.MAIL_PASS,
 };

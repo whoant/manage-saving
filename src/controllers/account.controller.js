@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const { Customer, SavingsBook, Interest, Period, FormCreate, FormClose } = require('../models');
-const { covertPlainObject, formatDateVN, formatMoney } = require('../utils');
+const { covertPlainObject, formatMoney, formatDate } = require('../utils');
 const ONLINE_SAVING = require('../config/onlineSaving');
 const STATE_ACCOUNT = require('../config/stateAccount');
 
@@ -19,11 +19,7 @@ module.exports.show = async (req, res, next) => {
     const { user } = res.locals;
 
     try {
-        const infoUser = await Customer.findOne({
-            where: {
-                id: id_user,
-            },
-        });
+        const infoUser = await getUser(id_user);
 
         const getAccountsOfUser = await SavingsBook.findAll({
             where: {
@@ -40,8 +36,8 @@ module.exports.show = async (req, res, next) => {
                 ...account,
                 deposit: formatMoney(account.deposit),
                 interest: formatMoney(account.interest),
-                expirationDate: formatDateVN(account.expirationDate),
-                createdDate: formatDateVN(account.createdAt),
+                expirationDate: formatDate(account.expirationDate, 'VN'),
+                createdDate: formatDate(account.createdAt, 'VN'),
                 stateMessage: STATE_ACCOUNT_MESSAGE[account.state - 1],
                 accountTypeMessage: ONLINE_SAVING_MESSAGE[account.accountType - 1],
             };
@@ -56,21 +52,9 @@ module.exports.show = async (req, res, next) => {
 module.exports.indexAccount = async (req, res, next) => {
     const { id_user } = req.params;
     try {
-        const getAccountsOfUser = await Customer.findOne({
-            where: {
-                id: id_user,
-            },
-            raw: true,
-            nest: true,
-        });
+        const getAccountsOfUser = await getUser(id_user);
 
-        const listPeriods = await Period.findAll({
-            include: Interest,
-            order: [
-                ['month', 'ASC'],
-                [Interest, 'createdAt', 'DESC'],
-            ],
-        });
+        const listPeriods = await getListPeriods();
 
         const listPeriodsRender = [];
         covertPlainObject(listPeriods).forEach((period) => {
@@ -79,13 +63,12 @@ module.exports.indexAccount = async (req, res, next) => {
             }
         });
 
-        // console.log(listPeriodsRender);
-
         if (!getAccountsOfUser) {
             return res.redirect('/staff/users');
         }
 
-        res.render('account/create', { getAccountsOfUser, listPeriodsRender });
+        const messages = await req.consumeFlash('info');
+        res.render('account/create', { getAccountsOfUser, listPeriodsRender, messages });
     } catch (e) {
         console.log(e);
     }
@@ -102,25 +85,15 @@ module.exports.createAccount = async (req, res, next) => {
             return res.redirect('back');
         }
 
-        const checkUser = await Customer.findOne({
-            where: {
-                id: id_user,
-            },
-        });
+        const checkUser = await getUser(id_user);
 
         if (checkUser === null) {
             return res.redirect('back');
         }
 
-        const listPeriods = await Period.findAll({
-            include: Interest,
-            order: [
-                ['month', 'ASC'],
-                [Interest, 'createdAt', 'DESC'],
-            ],
-        });
-
         const listPeriodsRender = [];
+        const listPeriods = await getListPeriods();
+
         covertPlainObject(listPeriods).forEach((period) => {
             if (period.Interests.length !== 0) {
                 listPeriodsRender.push({ ...period, Interests: period.Interests[0] });
@@ -160,9 +133,10 @@ module.exports.createAccount = async (req, res, next) => {
             staffId: user.id,
         });
 
+        await req.flash('info', 'Thêm tài khoản tiết kiệm thành công !');
         res.redirect(`/staff/accounts/${id_user}`);
     } catch (e) {
-        console.log(e);
+        res.redirect('back');
     }
 };
 
@@ -183,10 +157,10 @@ module.exports.getDetailAccount = async (req, res, next) => {
 
         infoAccount.deposit = formatMoney(infoAccount.deposit);
         infoAccount.interest = formatMoney(infoAccount.interest);
-        infoAccount.createdAt = formatDateVN(infoAccount.createdAt);
-        infoAccount.expirationDate = formatDateVN(infoAccount.expirationDate);
+        infoAccount.createdAt = formatDate(infoAccount.createdAt, 'VN');
+        infoAccount.expirationDate = formatDate(infoAccount.expirationDate, 'VN');
         infoAccount.accountTypeMessage = ONLINE_SAVING_MESSAGE[infoAccount.accountType - 1];
-        infoAccount.closingDate = formatDateVN(infoAccount.closingDate);
+        infoAccount.closingDate = formatDate(infoAccount.closingDate, 'VN');
         if (infoAccount.state === STATE_ACCOUNT.PENDING) {
             infoAccount.closingDate = 'Chưa kết thúc';
         }
@@ -233,3 +207,23 @@ module.exports.putDetailAccount = async (req, res, next) => {
         console.log(e);
     }
 };
+
+function getListPeriods() {
+    return Period.findAll({
+        include: Interest,
+        order: [
+            ['month', 'ASC'],
+            [Interest, 'createdAt', 'DESC'],
+        ],
+    });
+}
+
+function getUser(id_user) {
+    return Customer.findOne({
+        where: {
+            id: id_user,
+        },
+        raw: true,
+        nest: true,
+    });
+}

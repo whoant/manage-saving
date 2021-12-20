@@ -13,6 +13,9 @@ html(lang="en")
         block navbar
 
         .container
+            if messages
+                each msg  in messages
+                    .alert.alert-primary.mt-3= msg
             if msg
                 .alert.alert-primary.mt-3= msg
             if errors
