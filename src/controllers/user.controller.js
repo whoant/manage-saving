@@ -10,6 +10,10 @@ const mailer = require('../services/mailer');
 
 const STATE_ACCOUNT = require('../config/stateAccount');
 const { Op } = require('sequelize');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const upload = multer({ dest: './src/public/uploads' }).single('imageNumber');
 
 module.exports.get = async (req, res, next) => {
     const { user } = res.locals;
@@ -53,43 +57,54 @@ module.exports.index = (req, res, next) => {
 };
 
 module.exports.createUser = async (req, res, next) => {
-    const { fullName, identityNumber, username, email, phone, sex, address, birthday } = req.body;
+    upload(req, res, async (error) => {
+        try {
+            if (error) throw new Error('Vui lòng thử lại !');
+            const { fullName, identityNumber, username, email, phone, sex, address, birthday } =
+                req.body;
+            const { filename } = req.file;
+            if (
+                !fullName ||
+                !identityNumber ||
+                !username ||
+                !email ||
+                !phone ||
+                !sex ||
+                !address ||
+                !birthday ||
+                !filename
+            ) {
+                throw new Error('Vui lòng nhập đủ thông tin !');
+            }
 
-    try {
-        if (
-            !fullName ||
-            !identityNumber ||
-            !username ||
-            !email ||
-            !phone ||
-            !sex ||
-            !address ||
-            !birthday
-        ) {
-            throw new Error('Vui lòng nhập đủ thông tin !');
+            const subject = 'Tạo tài khoản thành công !';
+            const password = randomCharacters(6);
+            const html = `Chúc mừng bạn <b>${fullName}</b>, bạn đã tạo tài khoản thành công <br/> Mật khẩu mặc định của bạn: <b>${password}</b>`;
+
+            await mailer(email, subject, html);
+            req.body.password = hash256(password);
+            const newCustomer = await Customer.create(req.body);
+            const newFile = req.file.path.replace(
+                filename,
+                newCustomer.id + path.extname(req.file.originalname)
+            );
+            fs.renameSync(req.file.path, newFile);
+
+            await req.flash('info', 'Tạo khách hàng thành công !');
+            res.redirect('/staff/users');
+        } catch (e) {
+            let error = e.message;
+
+            if (e.name === 'SequelizeUniqueConstraintError') {
+                error = 'Số chức minh nhân dân đã đã kí';
+            }
+
+            return res.render('staff/create-user', {
+                errors: [error],
+                ...req.body,
+            });
         }
-        const subject = 'Mật khẩu mặc định';
-        const password = randomCharacters(6);
-        const html = `Mật khẩu mặc định của bạn: <b>${password}</b>`;
-
-        await mailer(email, subject, html);
-        req.body.password = hash256(password);
-        await Customer.create(req.body);
-
-        await req.flash('info', 'Tạo khách hàng thành công !');
-        res.redirect('/staff/users');
-    } catch (e) {
-        let error = e.message;
-
-        if (e.name === 'SequelizeUniqueConstraintError') {
-            error = 'Số chức minh nhân dân đã đã kí';
-        }
-
-        return res.render('staff/create-user', {
-            errors: [error],
-            ...req.body,
-        });
-    }
+    });
 };
 
 module.exports.show = async (req, res, next) => {

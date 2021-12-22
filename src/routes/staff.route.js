@@ -2,6 +2,7 @@ const express = require('express');
 const staffController = require('../controllers/staff.controller');
 const userController = require('../controllers/user.controller');
 const accountController = require('../controllers/account.controller');
+const saveAccountController = require('../controllers/savingAccount.controller');
 
 const route = express.Router();
 
@@ -24,5 +25,7 @@ route.post('/accounts/:id_user/create', accountController.createAccount);
 route.get('/accounts/:id_user/detail/:id_account', accountController.getDetailAccount);
 
 route.put('/accounts/:id_user/detail/:id_account', accountController.putDetailAccount);
+
+route.get('/saving-account', saveAccountController.index);
 
 module.exports = route;

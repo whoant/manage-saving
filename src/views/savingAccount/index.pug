@@ -1,0 +1,68 @@
+extends ../layout/main.pug
+
+mixin list(stt, customer)
+    tr
+        th(scope='row')= stt
+        td
+            a(href='/staff/users/' + customer.id + '/edit')= customer.identityNumber
+        td= customer.fullName
+        td= customer.balance
+        td= customer.amount
+        td
+            a(href='/staff/accounts/' + customer.id)= customer.total
+
+block navbar
+    include ../layout/navbarStaff.pug
+block content
+    .row.mt-4
+        .col-6
+            a.btn.btn-warning(href='/staff/users/create') Duyệt lệnh hết tài khoản
+        .col-12.mt-2
+            table.table.table-bordered.text-center
+                thead
+                    tr
+                        th(scope='col', width='2%') #
+                        th(scope='col') Số tài khoản
+                        th(scope='col') Số dư
+                        th(scope='col') Số dư tiết kiệm
+                        th(scope='col') Tài khoản hiện hữu
+                tbody
+                    if listCustomer
+                        - var x = 1
+                        each customer in listCustomer
+                            +list(x++, customer)
+
+
+    #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Xoá người dùng ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    | Bạn chắc chắn xoá người dùng này chứ ?
+                .modal-footer
+                    button.btn.btn-danger#btn-delete-user(type='button') Xoá bỏ
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+
+    //- Form delete user
+    form(method="post", name="form-delete-user", style="display: none;")
+
+
+    script.
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteForm = document.forms['form-delete-user'];
+            let idUser = null;
+
+            $('#delete-user-modal').on('show.bs.modal', (event) => {
+                const button = $(event.relatedTarget);
+                idUser = button.data('id');
+            });
+
+            document.getElementById('btn-delete-user').addEventListener('click', () => {
+                deleteForm.action = '/staff/users/' + idUser  + '?_method=DELETE';
+                deleteForm.submit();
+            });
+
+        });
