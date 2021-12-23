@@ -11,15 +11,29 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-module.exports = (to, subject, html) => {
+module.exports = (to, subject, html, content = '') => {
     return new Promise((resolve, reject) => {
-        const mainOptions = {
+        let mainOptions = {
             from: 'Võ Văn Hoàng Tuân',
             to,
             subject,
             html,
         };
-        transporter.sendMail(mainOptions, function (err, info) {
+
+        if (content !== '') {
+            mainOptions = {
+                ...mainOptions,
+                attachments: {
+                    filename: 'file.pdf',
+                    content,
+                    contentType: 'application/pdf',
+                },
+            };
+        }
+
+        console.log(mainOptions);
+
+        transporter.sendMail(mainOptions, (err, info) => {
             if (err) {
                 reject(err);
             } else {

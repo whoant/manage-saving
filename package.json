@@ -15,7 +15,6 @@
     "express": "^4.17.1",
     "express-flash-message": "^2.1.0",
     "express-session": "^1.17.2",
-    "html-pdf": "^3.0.1",
     "html-pdf-node": "^1.0.8",
     "method-override": "^3.0.0",
     "moment": "^2.29.1",

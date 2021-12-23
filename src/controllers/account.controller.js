@@ -1,9 +1,19 @@
 const moment = require('moment');
 
-const { Customer, SavingsBook, Interest, Period, FormCreate, FormClose } = require('../models');
+const {
+    Customer,
+    SavingsBook,
+    Interest,
+    Period,
+    FormCreate,
+    FormClose,
+    Var,
+} = require('../models');
 const { covertPlainObject, formatMoney, formatDate, generateDeposit } = require('../utils');
 const ONLINE_SAVING = require('../config/onlineSaving');
 const STATE_ACCOUNT = require('../config/stateAccount');
+
+const mailer = require('../services/mailer');
 
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require('../config/message');
 const fs = require('fs');
@@ -21,6 +31,7 @@ module.exports.show = async (req, res, next) => {
         const getAccountsOfUser = await SavingsBook.findAll({
             where: {
                 customerId: id_user,
+                state: STATE_ACCOUNT.PENDING,
             },
             order: [['createdAt', 'DESC']],
         });
@@ -39,8 +50,14 @@ module.exports.show = async (req, res, next) => {
                 accountTypeMessage: ONLINE_SAVING_MESSAGE[account.accountType - 1],
             };
         });
+        const messages = await req.consumeFlash('info');
 
-        res.render('account/show', { infoUser, accounts: accountsRender, name: user.name });
+        res.render('account/show', {
+            messages,
+            infoUser,
+            accounts: accountsRender,
+            name: user.name,
+        });
     } catch (e) {
         console.error(e);
     }
@@ -65,7 +82,8 @@ module.exports.indexAccount = async (req, res, next) => {
         }
 
         const messages = await req.consumeFlash('info');
-        res.render('account/create', { getAccountsOfUser, listPeriodsRender, messages });
+        const errors = await req.consumeFlash('error');
+        res.render('account/create', { getAccountsOfUser, listPeriodsRender, messages, errors });
     } catch (e) {
         console.log(e);
     }
@@ -79,6 +97,17 @@ module.exports.createAccount = async (req, res, next) => {
             accountType < ONLINE_SAVING.INTEREST_RECEIVER &&
             accountType > ONLINE_SAVING.CLOSING_ACCOUNT
         ) {
+            return res.redirect('back');
+        }
+
+        const MIN_DEPOSIT = await Var.findOne({
+            where: {
+                name: 'min_deposit',
+            },
+        });
+
+        if (Number(deposit) < MIN_DEPOSIT.value) {
+            await req.flash('error', `Số tiền phải lớn hơn ${formatMoney(MIN_DEPOSIT.value)}`);
             return res.redirect('back');
         }
 
@@ -134,7 +163,7 @@ module.exports.createAccount = async (req, res, next) => {
 
         const genPdf = await generateDeposit({
             id: newSavingBook.id,
-            name: user.fullName,
+            name: checkUser.fullName,
             type: ONLINE_SAVING_MESSAGE[accountType - 1],
             expirationDate: formatDate(expirationDate, 'VN'),
             createdAt: formatDate(newSavingBook.createdAt, 'VN'),
@@ -144,9 +173,7 @@ module.exports.createAccount = async (req, res, next) => {
             typeDeposit,
         });
 
-        fs.writeFileSync(path.join(__dirname, '..', 'static', 'data.pdf'), genPdf, {
-            encoding: 'utf8',
-        });
+        await mailer(checkUser.email, 'Mở tài khoản tiết kiệm', '', genPdf);
 
         await req.flash('info', 'Thêm tài khoản tiết kiệm thành công !');
         res.redirect(`/staff/accounts/${id_user}`);
@@ -181,6 +208,7 @@ module.exports.getDetailAccount = async (req, res, next) => {
             infoAccount.closingDate = 'Chưa kết thúc';
         }
         infoAccount.name = user.name;
+        infoAccount.messages = await req.consumeFlash('info');
 
         res.render('account/detail-account', infoAccount);
     } catch (e) {
@@ -217,7 +245,7 @@ module.exports.putDetailAccount = async (req, res, next) => {
         await infoAccount.Customer.increment({
             balance: infoAccount.deposit,
         });
-
+        await req.flash('info', 'Đáo hạng thành công !');
         res.redirect('back');
     } catch (e) {
         console.log(e);
