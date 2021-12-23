@@ -4,28 +4,33 @@ block navbar
 block content
     .row
         .col-xl-12.col.md-12.col-12
-            .card.mt-5
+            .card.mt-2
                 .card-body
                     h3.card-title.text-center Chỉnh sửa thông tin khách hàng
                     .row
                         .col-12
-                            form(action="/staff/users/" + id +"?_method=PUT", method="post")
-                                .row
+                            .card
+                                img(src = "/uploads/" + id + ".png")
+                            form(action="/staff/users/" + id + "?_method=PUT", method="post", enctype="multipart/form-data")
+                                .row.mt-2
                                     .form-group.col-lg-4.col-12
                                         label(for="fullName") Họ và tên
-                                        input#fullName.form-control(type="text", name="fullName", value= fullName ? fullName: "")
+                                        input#fullName.form-control(type="text", name="fullName", value= fullName ? fullName : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="identityNumber") Số chứng minh thư
-                                        input#identityNumber.form-control(type="text", name="identityNumber", value= identityNumber ? identityNumber: "")
+                                        input#identityNumber.form-control(type="text", name="identityNumber", value= identityNumber ? identityNumber : "")
+                                    .form-group.col-lg-4.col-12
+                                        label(for="imageNumber") Ảnh chứng minh thư
+                                        input#imageNumber.form-control(type="file", name="imageNumber", accept="image/png, image/gif, image/jpeg")
                                     .form-group.col-lg-4.col-12
                                         label(for="username") Tài khoản
-                                        input#username.form-control(type="text", name="username", value= username ? username: "")
+                                        input#username.form-control(type="text", name="username", value= username ? username : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="email") Email
-                                        input#email.form-control(type="email", name="email", value= email ? email: "")
+                                        input#email.form-control(type="email", name="email", value= email ? email : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="phone") Số điện thoại
-                                        input#phone.form-control(type="text", name="phone", value= phone ? phone: "")
+                                        input#phone.form-control(type="text", name="phone", value= phone ? phone : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="sex") Giới tính
                                         select.form-control#sex(name="sex")
@@ -37,9 +42,10 @@ block content
                                                 option(value="1", selected) Nữ
                                     .form-group.col-lg-4.col-12
                                         label(for="address") Địa chỉ
-                                        input#address.form-control(type="text", name="address", value= address ? address: "")
+                                        input#address.form-control(type="text", name="address", value= address ? address : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="birthday") Ngày sinh
-                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday: "")
+                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday : "")
+
                                 button.btn.btn-danger.float-right Cập nhập thông tin
                             button.btn.btn-primary Reset mật khẩu

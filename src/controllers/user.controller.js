@@ -84,10 +84,7 @@ module.exports.createUser = async (req, res, next) => {
             await mailer(email, subject, html);
             req.body.password = hash256(password);
             const newCustomer = await Customer.create(req.body);
-            const newFile = req.file.path.replace(
-                filename,
-                newCustomer.id + path.extname(req.file.originalname)
-            );
+            const newFile = req.file.path.replace(filename, newCustomer.id + 'png');
             fs.renameSync(req.file.path, newFile);
 
             await req.flash('info', 'Tạo khách hàng thành công !');
@@ -132,44 +129,53 @@ module.exports.show = async (req, res, next) => {
 };
 
 module.exports.put = async (req, res, next) => {
-    const { id_user } = req.params;
-    const { fullName, identityNumber, username, email, phone, sex, address, birthday } = req.body;
+    upload(req, res, async (error) => {
+        if (error) throw new Error('Vui lòng thử lại !');
+        const { id_user } = req.params;
 
-    try {
-        if (
-            !id_user ||
-            !fullName ||
-            !identityNumber ||
-            !username ||
-            !email ||
-            !phone ||
-            !sex ||
-            !address ||
-            !birthday
-        ) {
-            throw new Error('Vui lòng nhập đủ thông tin !');
+        const { fullName, identityNumber, username, email, phone, sex, address, birthday } =
+            req.body;
+        const { filename } = req.file;
+
+        try {
+            if (
+                !id_user ||
+                !fullName ||
+                !identityNumber ||
+                !username ||
+                !email ||
+                !phone ||
+                !sex ||
+                !address ||
+                !birthday ||
+                !filename
+            ) {
+                throw new Error('Vui lòng nhập đủ thông tin !');
+            }
+            const body = { ...req.body };
+
+            await Customer.update(body, {
+                where: {
+                    id: id_user,
+                },
+            });
+            const newFile = req.file.path.replace(filename, id_user + '.png');
+            fs.renameSync(req.file.path, newFile);
+
+            await req.flash('info', 'Cập nhập thông tin khách hàng thành công !');
+
+            res.redirect('/staff/users');
+        } catch (e) {
+            let error = e.message;
+
+            if (e.name === 'SequelizeUniqueConstraintError') {
+                error = 'Số chức minh nhân dân đã đăng kí';
+            }
+
+            return res.render('staff/edit-user', {
+                errors: [error],
+                ...req.body,
+            });
         }
-        const body = { ...req.body };
-
-        await Customer.update(body, {
-            where: {
-                id: id_user,
-            },
-        });
-
-        await req.flash('info', 'Cập nhập thông tin khách hàng thành công !');
-
-        res.redirect('/staff/users');
-    } catch (e) {
-        let error = e.message;
-
-        if (e.name === 'SequelizeUniqueConstraintError') {
-            error = 'Số chức minh nhân dân đã đăng kí';
-        }
-
-        return res.render('staff/edit-user', {
-            errors: [error],
-            ...req.body,
-        });
-    }
+    });
 };

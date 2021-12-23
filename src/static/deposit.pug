@@ -1,0 +1,72 @@
+doctype html
+html(lang='en')
+    head
+        meta(charset='UTF-8')
+        title Title
+    body
+        span.im
+            table
+                tbody
+                    tr
+                        td(style='padding-top:9px')
+                            table(style='max-width:100%;min-width:100%')
+                                tbody
+                                    tr
+                                        td(style='padding:0px 18px 9px;font-size:15px;line-height:150%' valign='top')
+                                            p(style='font-size:15px;line-height:150%')
+                                                span(style='font-size:15px')
+                                                    span(style='color:#563d82')
+                                                        strong #{name}
+                                                    span(style='color:#000000')  thân mến
+                                                    | ,
+                                                    br
+                                                    br
+                                                    | Cảm ơn Quý khách đã lựa chọn sử dụng sản phẩm Tiết kiệm
+                                                    br
+                                                    | Chúng tôi rất vui được xác nhận rằng Quý khách vừa mở thành công
+                                                    strong  #{type}
+                                                    |  với các thông tin như sau:
+        table(border='0' cellpadding='0' cellspacing='0' width='100%')
+            tbody
+                tr
+                    td(valign='top')
+                        table(border='1' cellpadding='10px' style='font:15px helvetica;text-align:center;width:100%;border-color:#979797')
+                            tbody
+                                tr
+                                    td(colspan='2')
+                                        p(align='center')
+                                            span.im
+                                                | Số tài khoản tiết kiệm
+                                                br
+                                            strong(style='font-size:15px') #{id}
+                                tr
+                                    td(colspan='2')
+                                        p(align='center')
+                                            | Tổng tiền gửi
+                                            br
+                                            strong(style='font-size:15px') #{deposit}
+                                tr
+                                    td(width='50%')
+                                        | Ngày mở
+                                        br
+                                        strong #{createdAt}
+                                    td(width='50%')
+                                        | Ngày đến hạn
+                                        br
+                                        strong #{expirationDate}
+                                tr
+                                    td(width='50%')
+                                        | Kỳ hạn & Lãi cuối kỳ
+                                        br
+                                        strong #{typeDeposit}
+                                    td(width='50%')
+                                        | Tổng tiền lãi
+                                        br
+                                        strong #{interest}
+                                tr
+                                    td(colspan='2' style='background-color:#efefef')
+                                        p(align='center')
+                                            span.im
+                                                | Số dư vào ngày đến hạn
+                                                br
+                                            strong(style='font-size:18px') #{totalAmount}

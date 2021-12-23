@@ -1,4 +1,9 @@
 const crypto = require('crypto');
+const html_to_pdf = require('html-pdf-node');
+const pug = require('pug');
+const path = require('path');
+
+const compiledFunction = pug.compileFile(path.join(__dirname, '..', 'static', 'deposit.pug'));
 
 const hash256 = (text) => {
     return crypto.createHash('sha256').update(text).digest('hex');
@@ -33,10 +38,43 @@ const randomCharacters = (length) => {
     return result;
 };
 
+const generateDeposit = async ({
+    id,
+    name,
+    type,
+    createdAt,
+    expirationDate,
+    interest,
+    totalAmount,
+    typeDeposit,
+    deposit,
+}) => {
+    try {
+        const content = compiledFunction({
+            id,
+            type,
+            name,
+            createdAt,
+            expirationDate,
+            interest,
+            totalAmount,
+            typeDeposit,
+            deposit,
+        });
+
+        const options = { format: 'A4' };
+        const pdfBuffer = await html_to_pdf.generatePdf({ content }, options);
+        return pdfBuffer;
+    } catch (e) {
+        return Promise.reject(e);
+    }
+};
+
 module.exports = {
     hash256,
     formatDate,
     covertPlainObject,
     formatMoney,
     randomCharacters,
+    generateDeposit,
 };

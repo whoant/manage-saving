@@ -1,11 +1,13 @@
 const moment = require('moment');
 
 const { Customer, SavingsBook, Interest, Period, FormCreate, FormClose } = require('../models');
-const { covertPlainObject, formatMoney, formatDate } = require('../utils');
+const { covertPlainObject, formatMoney, formatDate, generateDeposit } = require('../utils');
 const ONLINE_SAVING = require('../config/onlineSaving');
 const STATE_ACCOUNT = require('../config/stateAccount');
 
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require('../config/message');
+const fs = require('fs');
+const path = require('path');
 
 module.exports.index = async (req, res, next) => {};
 
@@ -128,9 +130,28 @@ module.exports.createAccount = async (req, res, next) => {
             staffId: user.id,
         });
 
+        const typeDeposit = `${periodCurrent.month} tháng & ${periodCurrent.Interests.factor}% năm`;
+
+        const genPdf = await generateDeposit({
+            id: newSavingBook.id,
+            name: user.fullName,
+            type: ONLINE_SAVING_MESSAGE[accountType - 1],
+            expirationDate: formatDate(expirationDate, 'VN'),
+            createdAt: formatDate(newSavingBook.createdAt, 'VN'),
+            deposit: formatMoney(deposit),
+            interest: formatMoney(interest),
+            totalAmount: formatMoney(deposit + interest),
+            typeDeposit,
+        });
+
+        fs.writeFileSync(path.join(__dirname, '..', 'static', 'data.pdf'), genPdf, {
+            encoding: 'utf8',
+        });
+
         await req.flash('info', 'Thêm tài khoản tiết kiệm thành công !');
         res.redirect(`/staff/accounts/${id_user}`);
     } catch (e) {
+        console.error(e);
         res.redirect('back');
     }
 };
