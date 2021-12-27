@@ -16,22 +16,27 @@ const STATE_ACCOUNT = require('../config/stateAccount');
 const mailer = require('../services/mailer');
 
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require('../config/message');
-const fs = require('fs');
-const path = require('path');
+const { Op } = require('sequelize');
 
 module.exports.index = async (req, res, next) => {};
 
 module.exports.show = async (req, res, next) => {
     const { id_user } = req.params;
+    let { search } = req.query;
     const { user } = res.locals;
 
     try {
         const infoUser = await getUser(id_user);
-
+        search = search || '';
         const getAccountsOfUser = await SavingsBook.findAll({
             where: {
                 customerId: id_user,
-                state: STATE_ACCOUNT.PENDING,
+                id: {
+                    [Op.like]: `%${search}%`,
+                },
+                state: {
+                    [Op.or]: [STATE_ACCOUNT.PENDING, STATE_ACCOUNT.FINISHED],
+                },
             },
             order: [['createdAt', 'DESC']],
         });
@@ -161,25 +166,55 @@ module.exports.createAccount = async (req, res, next) => {
 
         const typeDeposit = `${periodCurrent.month} tháng & ${periodCurrent.Interests.factor}% năm`;
 
-        const genPdf = await generateDeposit({
-            id: newSavingBook.id,
-            name: checkUser.fullName,
-            type: ONLINE_SAVING_MESSAGE[accountType - 1],
-            expirationDate: formatDate(expirationDate, 'VN'),
-            createdAt: formatDate(newSavingBook.createdAt, 'VN'),
-            deposit: formatMoney(deposit),
-            interest: formatMoney(interest),
-            totalAmount: formatMoney(deposit + interest),
-            typeDeposit,
-        });
+        // const genPdf = await generateDeposit({
+        //     id: newSavingBook.id,
+        //     name: checkUser.fullName,
+        //     type: ONLINE_SAVING_MESSAGE[accountType - 1],
+        //     expirationDate: formatDate(expirationDate, 'VN'),
+        //     createdAt: formatDate(newSavingBook.createdAt, 'VN'),
+        //     deposit: formatMoney(deposit),
+        //     interest: formatMoney(interest),
+        //     totalAmount: formatMoney(deposit + interest),
+        //     typeDeposit,
+        // });
 
-        await mailer(checkUser.email, 'Mở tài khoản tiết kiệm', '', genPdf);
-
-        await req.flash('info', 'Thêm tài khoản tiết kiệm thành công !');
+        // await mailer(checkUser.email, 'Mở tài khoản tiết kiệm', '', genPdf);
+        await req.flash('info', 'Mở tài khoản thành công !');
         res.redirect(`/staff/accounts/${id_user}`);
     } catch (e) {
         console.error(e);
         res.redirect('back');
+    }
+};
+
+module.exports.downloadSavingBook = async (req, res, next) => {
+    try {
+        const { id_user, id_account } = req.params;
+        const infoAccount = await SavingsBook.findOne({
+            where: {
+                customerId: id_user,
+                id: id_account,
+            },
+            include: [{ model: Customer }, { model: Interest, include: [{ model: Period }] }],
+            nest: true,
+            raw: true,
+        });
+        const typeDeposit = `${infoAccount.Interest.Period.month} tháng & ${infoAccount.Interest.factor}% năm`;
+
+        const genPdf = await generateDeposit({
+            id: infoAccount.id,
+            name: infoAccount.Customer.fullName,
+            type: ONLINE_SAVING_MESSAGE[infoAccount.accountType - 1],
+            expirationDate: formatDate(infoAccount.expirationDate, 'VN'),
+            createdAt: formatDate(infoAccount.createdAt, 'VN'),
+            deposit: formatMoney(infoAccount.deposit),
+            interest: formatMoney(infoAccount.interest),
+            totalAmount: formatMoney(infoAccount.deposit + infoAccount.interest),
+            typeDeposit,
+        });
+    } catch (e) {
+        console.error('=== downloadSavingBook ===');
+        console.error(e);
     }
 };
 
@@ -225,11 +260,17 @@ module.exports.putDetailAccount = async (req, res, next) => {
                 customerId: id_user,
                 id: id_account,
             },
-            include: [{ model: Customer }, { model: Interest, include: [{ model: Period }] }],
+            include: Customer,
         });
 
-        if (!infoAccount || infoAccount.state !== STATE_ACCOUNT.PENDING) {
+        if (!infoAccount) {
             return res.redirect('back');
+        }
+
+        let newBalance = infoAccount.deposit;
+
+        if (infoAccount.state === STATE_ACCOUNT.FINISHED) {
+            newBalance += infoAccount.interest;
         }
 
         await infoAccount.update({
@@ -241,9 +282,8 @@ module.exports.putDetailAccount = async (req, res, next) => {
             staffId: user.id,
             savingsBookId: id_account,
         });
-
         await infoAccount.Customer.increment({
-            balance: infoAccount.deposit,
+            balance: newBalance,
         });
         await req.flash('info', 'Đáo hạn thành công !');
         res.redirect('back');

@@ -1,16 +1,16 @@
 extends ../layout/main.pug
 
 mixin list(stt, account)
-        tr#table-primary
-            th(scope='row')= stt
-            td
-                a(href='/staff/accounts/' + infoUser.id + '/detail/' + account.id)= account.id
-            td= account.deposit
-            td= account.interest
-            td= account.accountTypeMessage
-            td= account.stateMessage
-            td= account.createdDate
-            td= account.expirationDate
+    tr#table-primary
+        th(scope='row')= stt
+        td
+            a(href='/staff/accounts/' + infoUser.id + '/detail/' + account.id)= account.id
+        td= account.deposit
+        td= account.interest
+        td= account.accountTypeMessage
+        td= account.stateMessage
+        td= account.createdDate
+        td= account.expirationDate
 
 
 block navbar
@@ -20,9 +20,9 @@ block content
         .col-6
             a.btn.btn-warning(href='/staff/accounts/' + infoUser.id + '/create') Thêm tài khoản tiết kiệm mới
         .col-6
-            form(action='/staff/accounts/' + infoUser.id + '/get', method="get")
+            form(action='/staff/accounts/' + infoUser.id + '?search', method="get")
                 .form-group
-                    input#name.form-control(type="text", name="search", placeholder="Nhập số tài khoản", value= search ? search: "")
+                    input#name.form-control(type="text", name="search", placeholder="Nhập số tài khoản", value= search ? search : "")
         .col-12
             .card.mt-2
                 .card-body

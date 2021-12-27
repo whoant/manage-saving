@@ -4,76 +4,79 @@ block navbar
     include ../layout/navbarStaff.pug
 block content
     .row
-            .col-xl-12.col.md-12.col-12
-                .card.mt-5
-                    .card-body
-                        h3.card-title.text-center Thông tin khách hàng
-                        .row
-                            .col-12
-                                    .row
-                                        .form-group.col-lg-4.col-12
-                                            label(for="fullName") Họ và tên
-                                            input#fullName.form-control(type="text", name="fullName", value= Customer.fullName, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="identityNumber") Số chứng minh thư
-                                            input#identityNumber.form-control(type="text", name="identityNumber", value= Customer.identityNumber, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="username") Tài khoản
-                                            input#username.form-control(type="text", name="username", value= Customer.username, disabled)
-                .card.mt-3
-                    .card-body
-                        h3.card-title.text-center Thông tin chi tiết tài khoản
-                        .row
-                            .col-12
-                                form(action="/staff/accounts/" + customer + "/create", method="post")
-                                    .row
-                                        .form-group.col-lg-4.col-12
-                                            label(for="account_id") Số tài khoản
-                                            input#account_id.form-control(type="text", name="account_id", value= id, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="deposit") Số tiền gửi
-                                            input#deposit.form-control(type="text", name="deposit", value= deposit, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="interest") Số tiền lãi
-                                            input#interest.form-control(type="text", name="interest", value= interest, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="month") Kì hạn
-                                            input#month.form-control(type="text", name="month", value= Interest.Period.name, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="factor") Lãi suất
-                                            input#factor.form-control(type="text", name="factor", value= Interest.factor + " % / năm", disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="accountType") Trạng thái tài khoản
-                                            input#accountType.form-control(type="text", name="accountType", value= accountTypeMessage, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="createdAt") Ngày tạo
-                                            input#createdAt.form-control(type="text", name="createdAt", value= createdAt, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="expirationDate") Ngày tới hạn
-                                            input#expirationDate.form-control(type="text", name="expirationDate", value= expirationDate, disabled)
-                                        .form-group.col-lg-4.col-12
-                                            label(for="closingDate") Ngày đóng
-                                            input#closingDate.form-control(type="text", name="closingDate", value= closingDate, disabled)
-                                    if state == 1
-                                        a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id) Đáo hạn sớm
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Thông tin khách hàng
+                    .row
+                        .col-12
+                            .row
+                                .form-group.col-lg-4.col-12
+                                    label(for="fullName") Họ và tên
+                                    input#fullName.form-control(type="text", name="fullName", value= Customer.fullName, disabled)
+                                .form-group.col-lg-4.col-12
+                                    label(for="identityNumber") Số chứng minh thư
+                                    input#identityNumber.form-control(type="text", name="identityNumber", value= Customer.identityNumber, disabled)
+                                .form-group.col-lg-4.col-12
+                                    label(for="username") Tài khoản
+                                    input#username.form-control(type="text", name="username", value= Customer.username, disabled)
+            .card.mt-3
+                .card-body
+                    h3.card-title.text-center Thông tin chi tiết tài khoản
+                    .row
+                        .col-12
+                            form(action="/staff/accounts/" + customer + "/create", method="post")
+                                .row
+                                    .form-group.col-lg-4.col-12
+                                        label(for="account_id") Số tài khoản
+                                        input#account_id.form-control(type="text", name="account_id", value= id, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="deposit") Số tiền gửi
+                                        input#deposit.form-control(type="text", name="deposit", value= deposit, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="interest") Số tiền lãi
+                                        input#interest.form-control(type="text", name="interest", value= interest, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="month") Kì hạn
+                                        input#month.form-control(type="text", name="month", value= Interest.Period.name, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="factor") Lãi suất
+                                        input#factor.form-control(type="text", name="factor", value= Interest.factor + " % / năm", disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="accountType") Trạng thái tài khoản
+                                        input#accountType.form-control(type="text", name="accountType", value= accountTypeMessage, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="createdAt") Ngày tạo
+                                        input#createdAt.form-control(type="text", name="createdAt", value= createdAt, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="expirationDate") Ngày tới hạn
+                                        input#expirationDate.form-control(type="text", name="expirationDate", value= expirationDate, disabled)
+                                    .form-group.col-lg-4.col-12
+                                        label(for="closingDate") Ngày đóng
+                                        input#closingDate.form-control(type="text", name="closingDate", value= closingDate, disabled)
+                                if state == 1
+                                    a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id) Đáo hạn sớm
+                                if state == 2
+                                    a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id) Đáo hạn đúng hạn
+                                a.btn.btn-primary.float-right(href="/staff/accounts/" + Customer.id + "/detail/" + id + "/download", target="_blank") Xuất sổ tiết kiệm
     #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
-            .modal-dialog(role='document')
-                .modal-content
-                    .modal-header
-                        h5#exampleModalLabel.modal-title Nhắc nhở ?
-                        button.close(type='button' data-dismiss='modal' aria-label='Close')
-                            span(aria-hidden='true') &times;
-                    .modal-body
-                        | Bạn có muốn đáo hạn tài khoản này không ?
-                    .modal-footer
-                        button.btn.btn-danger#btn-delete-user(type='button') Đồng ý
-                        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
-    form(method="post", id="form-delete-user", style="display: none;", action='/staff/accounts/' + Customer.id + '/detail/' +id+'?_method=PUT')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Nhắc nhở ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    | Bạn có muốn đáo hạn tài khoản này không ?
+                .modal-footer
+                    button.btn.btn-danger#btn-delete-user(type='button') Đồng ý
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+    form(method="post", id="form-delete-user", style="display: none;", action='/staff/accounts/' + Customer.id + '/detail/' + id + '?_method=PUT')
     script.
-            document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
 
-                document.getElementById('btn-delete-user').addEventListener('click', () => {
-                    $('#form-delete-user').submit();
-                });
-
+            document.getElementById('btn-delete-user').addEventListener('click', () => {
+                $('#form-delete-user').submit();
             });
+
+        });

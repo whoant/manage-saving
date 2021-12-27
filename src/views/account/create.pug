@@ -9,16 +9,16 @@ block content
                     h3.card-title.text-center Thông tin khách hàng
                     .row
                         .col-12
-                                .row
-                                    .form-group.col-lg-4.col-12
-                                        label(for="fullName") Họ tên
-                                        input#fullName.form-control(type="text", name="fullName", value= getAccountsOfUser.fullName, disabled)
-                                    .form-group.col-lg-4.col-12
-                                        label(for="identityNumber") Số chứng minh thư
-                                        input#identityNumber.form-control(type="text", name="identityNumber", value= getAccountsOfUser.identityNumber, disabled)
-                                    .form-group.col-lg-4.col-12
-                                        label(for="username") Tài khoản
-                                        input#username.form-control(type="text", name="username", value= getAccountsOfUser.username, disabled)
+                            .row
+                                .form-group.col-lg-4.col-12
+                                    label(for="fullName") Họ tên
+                                    input#fullName.form-control(type="text", name="fullName", value= getAccountsOfUser.fullName, disabled)
+                                .form-group.col-lg-4.col-12
+                                    label(for="identityNumber") Số chứng minh thư
+                                    input#identityNumber.form-control(type="text", name="identityNumber", value= getAccountsOfUser.identityNumber, disabled)
+                                .form-group.col-lg-4.col-12
+                                    label(for="username") Tài khoản
+                                    input#username.form-control(type="text", name="username", value= getAccountsOfUser.username, disabled)
             .card.mt-5
                 .card-body
                     h3.card-title.text-center Thêm tài khoản tiết kiệm mới
@@ -29,7 +29,7 @@ block content
                                     input#id_user.form-control(type="hidden", name="id_user", value= getAccountsOfUser.id)
                                     .form-group.col-lg-6.col-12
                                         label(for="deposit") Số tiền
-                                        input#deposit.form-control(type="number", name="deposit", value= deposit ? deposit: "")
+                                        input#deposit.form-control(type="number", name="deposit", value= deposit ? deposit : "")
                                     .form-group.col-lg-6.col-12
                                         label(for="accountType") Loại tài khoản
                                         select.form-control#accountType(name="accountType")
@@ -60,7 +60,7 @@ block content
         document.addEventListener('DOMContentLoaded', () => {
 
             $('#date-end').val(moment().add(a[0].month, 'M').format('DD/MM/YYYY'));
-            $("#deposit").on('input', function(e){
+            $("#deposit").on('input', function(e) {
                 text = this.value;
                 let value = formatMoney(text);
                 $('label[for="deposit"]').text(`Số tiền : ${value}`);
@@ -68,7 +68,7 @@ block content
                 $('#interest-money').val(formatMoney(money));
             });
 
-            $('#interest_id').on('change', function(){
+            $('#interest_id').on('change', function() {
                 indexPeriod = a.findIndex(ele => ele.Interests.id === this.value);
                 periodCurrent = a[indexPeriod];
                 $('#date-end').val(moment().add(periodCurrent.month, 'M').format('DD/MM/YYYY'));
@@ -79,11 +79,14 @@ block content
         });
 
         function formatMoney(text) {
-            let value = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(text);
+            let value = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(text);
             return value;
         }
 
-        function calMoney(){
-            let money = text * periodCurrent.Interests.factor / 100 / 12 * periodCurrent.month ;
+        function calMoney() {
+            let money = text * periodCurrent.Interests.factor / 100 / 12 * periodCurrent.month;
             return money;
         }

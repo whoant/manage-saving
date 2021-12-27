@@ -22,6 +22,8 @@ route.get('/accounts/:id_user/create', accountController.indexAccount);
 
 route.post('/accounts/:id_user/create', accountController.createAccount);
 
+route.get('/accounts/:id_user/detail/:id_account/download', accountController.downloadSavingBook);
+
 route.get('/accounts/:id_user/detail/:id_account', accountController.getDetailAccount);
 
 route.put('/accounts/:id_user/detail/:id_account', accountController.putDetailAccount);
