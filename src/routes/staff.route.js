@@ -8,6 +8,8 @@ const route = express.Router();
 
 route.get('/', staffController.get);
 
+route.route('/info').get(staffController.getDetailPassword).post(staffController.updatePassword);
+
 route.get('/users', userController.get);
 
 route.route('/users/create').get(userController.index).post(userController.createUser);
@@ -20,18 +22,18 @@ route.put('/users/:id_user/password', userController.updatePassword);
 
 route.get('/accounts/:id_user', accountController.show);
 
-route.get('/accounts/:id_user/create', accountController.indexAccount);
-
-route.post('/accounts/:id_user/create', accountController.createAccount);
+route
+    .route('/accounts/:id_user/create')
+    .get(accountController.indexAccount)
+    .post(accountController.createAccount);
 
 route.get('/accounts/:id_user/detail/:id_account/download', accountController.downloadSavingBook);
 
-route.get('/accounts/:id_user/detail/:id_account', accountController.getDetailAccount);
+route
+    .route('/accounts/:id_user/detail/:id_account')
+    .get(accountController.getDetailAccount)
+    .put(accountController.putDetailAccount);
 
-route.put('/accounts/:id_user/detail/:id_account', accountController.putDetailAccount);
-
-route.get('/saving-account', saveAccountController.index);
-
-route.post('/saving-account', saveAccountController.create);
+route.route('/saving-account').get(saveAccountController.index).post(saveAccountController.create);
 
 module.exports = route;

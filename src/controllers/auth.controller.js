@@ -38,7 +38,6 @@ module.exports.post = async (req, res, next) => {
 };
 
 module.exports.delete = async (req, res) => {
-    console.log(req);
     res.clearCookie('id');
     res.redirect('/auth');
 };

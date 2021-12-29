@@ -12,8 +12,6 @@ module.exports.requireAuth = async (req, res, next) => {
                 id,
             },
             include: Office,
-            raw: true,
-            nest: true,
         });
 
         if (!checkUser) {
@@ -33,6 +31,6 @@ module.exports.requirePermissions = (permissions) => {
             return next();
         }
 
-        return res.redirect('back');
+        res.redirect('back');
     };
 };

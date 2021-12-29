@@ -1,12 +1,4 @@
-const {
-    Customer,
-    SavingsBook,
-    Interest,
-    Period,
-    FormCreate,
-    FormClose,
-    Var,
-} = require('../models');
+const { Customer, SavingsBook, Interest, Period, FormCreate, FormClose } = require('../models');
 
 const mailer = require('../services/mailer');
 const ONLINE_SAVING = require('../config/onlineSaving');
@@ -17,10 +9,11 @@ const { covertPlainObject } = require('../utils');
 
 class SavingAccountController {
     async index(req, res, next) {
+        const { user } = res.locals;
         try {
             const messages = await req.consumeFlash('info');
             const listSavingsBooks = await getAllSavingsBooks();
-            res.render('savingAccount/index', { listSavingsBooks, messages });
+            res.render('savingAccount/index', { listSavingsBooks, messages, user });
         } catch (e) {
             next(e);
         }
