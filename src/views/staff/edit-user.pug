@@ -48,4 +48,34 @@ block content
                                         input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday : "")
 
                                 button.btn.btn-danger.float-right Cập nhập thông tin
-                            button.btn.btn-primary Reset mật khẩu
+                            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= id) Khôi phục mật khẩu
+
+    #update-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Khôi phục mật khẩu ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    | Bạn chắc chắn khôi phục mật khẩu này chứ ?
+                .modal-footer
+                    button.btn.btn-danger#btn-submit(type='button') Đồng ý
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+    form(method="post", name="form-update-user", style="display: none;")
+    script.
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteForm = document.forms['form-update-user'];
+            let idUser = null;
+
+            $('#update-user-modal').on('show.bs.modal', (event) => {
+                const button = $(event.relatedTarget);
+                idUser = button.data('id');
+            });
+            document.getElementById('btn-submit').addEventListener('click', () => {
+
+                deleteForm.action = `/staff/users/${idUser}/password?_method=PUT`;
+                deleteForm.submit();
+            });
+
+        });

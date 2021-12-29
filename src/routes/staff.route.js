@@ -16,6 +16,8 @@ route.get('/users/:id_user/edit', userController.show);
 
 route.put('/users/:id_user', userController.put);
 
+route.put('/users/:id_user/password', userController.updatePassword);
+
 route.get('/accounts/:id_user', accountController.show);
 
 route.get('/accounts/:id_user/create', accountController.indexAccount);

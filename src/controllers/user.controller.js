@@ -12,7 +12,7 @@ const STATE_ACCOUNT = require('../config/stateAccount');
 const { Op } = require('sequelize');
 const multer = require('multer');
 const fs = require('fs');
-const path = require('path');
+
 const upload = multer({ dest: './src/public/uploads' }).single('imageNumber');
 
 module.exports.get = async (req, res, next) => {
@@ -180,4 +180,34 @@ module.exports.put = async (req, res, next) => {
             });
         }
     });
+};
+
+module.exports.updatePassword = async (req, res, next) => {
+    const { id_user } = req.params;
+
+    try {
+        const customerCurrent = await Customer.findByPk(id_user);
+        if (!customerCurrent) {
+            throw new Error('Vui lòng kiểm tra lại người dùng !');
+        }
+        const { email, fullName } = customerCurrent;
+        const password = randomCharacters(6);
+        const html = `Tài khoản của bạn <b>${fullName}</b> đã đổi mật khẩu thành công <br/> Mật khẩu của bạn: <b>${password}</b>`;
+
+        await mailer(email, 'Khôi phục mật khẩu', html);
+        const hashPassword = hash256(password);
+        customerCurrent.password = hashPassword;
+        await customerCurrent.save();
+
+        await req.flash('info', 'Đã gửi email chứa mật khẩu vào khách hàng !');
+
+        res.redirect(`/staff/users/${id_user}/edit`);
+    } catch (e) {
+        let error = e.message;
+
+        return res.render('staff/edit-user', {
+            errors: [error],
+            ...req.body,
+        });
+    }
 };

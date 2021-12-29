@@ -31,8 +31,6 @@ module.exports = (to, subject, html, content = '') => {
             };
         }
 
-        console.log(mainOptions);
-
         transporter.sendMail(mainOptions, (err, info) => {
             if (err) {
                 reject(err);
