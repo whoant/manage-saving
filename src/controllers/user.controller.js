@@ -121,8 +121,8 @@ module.exports.show = async (req, res, next) => {
         }
 
         const birthday = formatDate(infoUser.birthday);
-
-        res.render('staff/edit-user', { ...infoUser, birthday });
+        const messages = await req.consumeFlash('info');
+        res.render('staff/edit-user', { ...infoUser, birthday, messages });
     } catch (e) {
         return res.redirect('/staff/users');
     }
@@ -135,7 +135,6 @@ module.exports.put = async (req, res, next) => {
 
         const { fullName, identityNumber, username, email, phone, sex, address, birthday } =
             req.body;
-        const { filename } = req.file;
 
         try {
             if (
@@ -147,8 +146,7 @@ module.exports.put = async (req, res, next) => {
                 !phone ||
                 !sex ||
                 !address ||
-                !birthday ||
-                !filename
+                !birthday
             ) {
                 throw new Error('Vui lòng nhập đủ thông tin !');
             }
@@ -159,12 +157,16 @@ module.exports.put = async (req, res, next) => {
                     id: id_user,
                 },
             });
-            const newFile = req.file.path.replace(filename, id_user + '.png');
-            fs.renameSync(req.file.path, newFile);
+
+            if (req.file) {
+                const { filename } = req.file;
+                const newFile = req.file.path.replace(filename, id_user + '.png');
+                fs.renameSync(req.file.path, newFile);
+            }
 
             await req.flash('info', 'Cập nhập thông tin khách hàng thành công !');
 
-            res.redirect('/staff/users');
+            res.redirect(`/staff/users/${id_user}/edit`);
         } catch (e) {
             let error = e.message;
 

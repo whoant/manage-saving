@@ -30,4 +30,6 @@ route.put('/accounts/:id_user/detail/:id_account', accountController.putDetailAc
 
 route.get('/saving-account', saveAccountController.index);
 
+route.post('/saving-account', saveAccountController.create);
+
 module.exports = route;

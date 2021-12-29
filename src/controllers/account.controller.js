@@ -13,8 +13,6 @@ const { covertPlainObject, formatMoney, formatDate, generateDeposit } = require(
 const ONLINE_SAVING = require('../config/onlineSaving');
 const STATE_ACCOUNT = require('../config/stateAccount');
 
-const mailer = require('../services/mailer');
-
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require('../config/message');
 const { Op } = require('sequelize');
 
@@ -164,23 +162,8 @@ module.exports.createAccount = async (req, res, next) => {
             staffId: user.id,
         });
 
-        const typeDeposit = `${periodCurrent.month} tháng & ${periodCurrent.Interests.factor}% năm`;
-
-        // const genPdf = await generateDeposit({
-        //     id: newSavingBook.id,
-        //     name: checkUser.fullName,
-        //     type: ONLINE_SAVING_MESSAGE[accountType - 1],
-        //     expirationDate: formatDate(expirationDate, 'VN'),
-        //     createdAt: formatDate(newSavingBook.createdAt, 'VN'),
-        //     deposit: formatMoney(deposit),
-        //     interest: formatMoney(interest),
-        //     totalAmount: formatMoney(deposit + interest),
-        //     typeDeposit,
-        // });
-
-        // await mailer(checkUser.email, 'Mở tài khoản tiết kiệm', '', genPdf);
         await req.flash('info', 'Mở tài khoản thành công !');
-        res.redirect(`/staff/accounts/${id_user}`);
+        res.redirect(`/staff/accounts/${id_user}/detail/${newSavingBook.id}`);
     } catch (e) {
         console.error(e);
         res.redirect('back');
@@ -212,6 +195,11 @@ module.exports.downloadSavingBook = async (req, res, next) => {
             totalAmount: formatMoney(infoAccount.deposit + infoAccount.interest),
             typeDeposit,
         });
+        const fileContents = Buffer.from(genPdf, 'base64');
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader(`Content-Disposition`, `attachment; filename=${infoAccount.id}.Pdf`);
+        res.end(fileContents);
     } catch (e) {
         console.error('=== downloadSavingBook ===');
         console.error(e);
