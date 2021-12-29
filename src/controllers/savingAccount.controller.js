@@ -34,6 +34,7 @@ class SavingAccountController {
             const createSavingsBooks = [];
             const updateSavingsBooks = [];
             const autoIncrementMoney = [];
+            let sendMail = [];
 
             const [listSavingsBooks, listPeriods] = await Promise.all([
                 getAllSavingsBooks(),
@@ -48,7 +49,7 @@ class SavingAccountController {
 
             listSavingsBooks.forEach((savingsBook) => {
                 const monthCurrent = savingsBook.Interest.Period.month;
-                const { customerId, accountType, deposit, interest, id } = savingsBook;
+                const { customerId, accountType, deposit, interest, id, Customer } = savingsBook;
                 const indexPeriod = listPeriodsRender.findIndex(
                     (period) => period.month === monthCurrent
                 );
@@ -60,7 +61,6 @@ class SavingAccountController {
                     })
                 );
 
-                const periodCurrent = listPeriodsRender[indexPeriod];
                 updateSavingsBooks.push(
                     savingsBook.update({
                         state: STATE_ACCOUNT.ON_TIME,
@@ -70,9 +70,9 @@ class SavingAccountController {
 
                 let depositCurrent = deposit + interest;
 
-                if (savingsBook.accountType === ONLINE_SAVING.INTEREST_RECEIVER) {
+                if (accountType === ONLINE_SAVING.INTEREST_RECEIVER) {
                     autoIncrementMoney.push(
-                        savingsBook.Customer.increment({
+                        Customer.increment({
                             balance: interest,
                         })
                     );
@@ -80,13 +80,13 @@ class SavingAccountController {
                     depositCurrent -= interest;
                 }
 
-                const newInterest =
-                    ((depositCurrent * periodCurrent.Interests.factor) / 100 / 12) *
-                    periodCurrent.month;
-                const newExpirationDate = moment().add(periodCurrent.month, 'M').toDate();
+                const { Interests, month } = listPeriodsRender[indexPeriod];
+
+                const newInterest = ((depositCurrent * Interests.factor) / 100 / 12) * month;
+                const newExpirationDate = moment().add(month, 'M').toDate();
                 const newClosingDate = newExpirationDate;
 
-                const interestId = periodCurrent.Interests.id;
+                const interestId = Interests.id;
 
                 const newSavingBook = {
                     deposit: depositCurrent,
@@ -99,13 +99,19 @@ class SavingAccountController {
                 };
 
                 createSavingsBooks.push(SavingsBook.create(newSavingBook));
+
+                const html = `<b>${Customer.fullName}</b> thân mếm <br/> Tất toán tài khoản <b>${id}</b> thành công <br/> Cảm ơn quý khách đã dùng dịch vụ của chúng tôi`;
+                sendMail.push(mailer(Customer.email, 'Tất toán tài khoản', html));
             });
 
             await Promise.all(createFormClose);
             await Promise.all(updateSavingsBooks);
             await Promise.all(autoIncrementMoney);
+            await Promise.allSettled(sendMail);
+            sendMail.length = 0;
 
             const promiseCreateSavingsBooks = await Promise.all(createSavingsBooks);
+
             const createFormCreate = [];
             promiseCreateSavingsBooks.forEach((newSavingBook) => {
                 createFormCreate.push(

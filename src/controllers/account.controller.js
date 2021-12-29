@@ -273,7 +273,7 @@ module.exports.putDetailAccount = async (req, res, next) => {
         await infoAccount.Customer.increment({
             balance: newBalance,
         });
-        await req.flash('info', 'Đáo hạn thành công !');
+        await req.flash('info', 'Tất toán thành công !');
         res.redirect('back');
     } catch (e) {
         console.log(e);

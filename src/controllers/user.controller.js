@@ -195,8 +195,7 @@ module.exports.updatePassword = async (req, res, next) => {
         const html = `Tài khoản của bạn <b>${fullName}</b> đã đổi mật khẩu thành công <br/> Mật khẩu của bạn: <b>${password}</b>`;
 
         await mailer(email, 'Khôi phục mật khẩu', html);
-        const hashPassword = hash256(password);
-        customerCurrent.password = hashPassword;
+        customerCurrent.password = hash256(password);
         await customerCurrent.save();
 
         await req.flash('info', 'Đã gửi email chứa mật khẩu vào khách hàng !');
