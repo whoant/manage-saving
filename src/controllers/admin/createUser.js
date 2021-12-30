@@ -1,7 +1,7 @@
 const { Office, Staff } = require('../../models');
 const { hash256 } = require('../../utils');
 
-module.exports.get = async (req, res) => {
+module.exports.get = async (req, res, next) => {
     try {
         const listOffices = await Office.findAll({
             attributes: ['id', 'name'],
@@ -16,7 +16,7 @@ module.exports.get = async (req, res) => {
     }
 };
 
-module.exports.post = async (req, res) => {
+module.exports.post = async (req, res, next) => {
     const { name, username, password, email, phone, sex, birthday, officeId, address } = req.body;
     if (
         !name ||
@@ -29,7 +29,7 @@ module.exports.post = async (req, res) => {
         !officeId ||
         !address
     ) {
-        throw new Error('Vui lòng nhập đủ thông tin !');
+        throw new Error('Vui lòng nhập đầy đủ thông tin !');
     }
     try {
         await Staff.create({
@@ -43,7 +43,7 @@ module.exports.post = async (req, res) => {
             officeId,
             address,
         });
-
+        await req.flash('info', 'Tạo tài khoản này thành công !');
         res.redirect('/admin/user');
     } catch (e) {
         let error = e.message;
@@ -56,11 +56,12 @@ module.exports.post = async (req, res) => {
             error = 'Tên tài khoản đã tồn tại !';
         }
 
-        return res.render('admin/create-user', {
+        res.render('admin/create-user', {
             ...req.body,
             listOffices,
-            errors: [error],
+            errors: error,
             officeId,
         });
+        next(e);
     }
 };

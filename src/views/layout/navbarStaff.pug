@@ -10,8 +10,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
             li.nav-item
                 a.nav-link(href='/staff/saving-account') Tài khoản tiết kiệm tới hạn
         ul.navbar-nav.ml-auto.dropdown-menu-lg-right
-            .btn-group.dropleft
-                a.nav-link.dropdown-toggle(href='#' role='button' data-display='static' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+            li.nav-item.dropdown
+                a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
                     | #{user.name}
                 .dropdown-menu.ropdown-menu-lg-right(aria-labelledby='navbarDropdown')
                     form.form-inline.my-2.my-lg-0#info(action="/staff/info", method="get")

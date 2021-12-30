@@ -1,34 +1,31 @@
 const slug = require('slug');
 const { Office, Staff } = require('../../models');
 
-module.exports.get = (req, res) => {
-    res.render('admin/create-office');
+module.exports.get = async (req, res) => {
+    const [messages, errors] = await Promise.all([
+        req.consumeFlash('info'),
+        req.consumeFlash('error'),
+    ]);
+
+    res.render('admin/create-office', { messages, errors });
 };
 
-module.exports.post = async (req, res) => {
+module.exports.post = async (req, res, next) => {
     const { name } = req.body;
     try {
         if (name === '') {
-            return res.render('admin/create-office', {
-                errors: ['Vui lòng nhập tên'],
-            });
+            throw new Error('Vui lòng nhập tên chức vụ');
         }
 
         const short_name = slug(name, '_');
         await Office.create({ name, short_name });
 
-        const listOffices = await Office.findAll({
-            attributes: ['id', 'name'],
-            include: Staff,
-        });
+        await req.flash('info', 'Tạo chức vụ thành công !');
 
-        res.render('admin/office', {
-            listOffices,
-            msg: 'Tạo chức vụ thành công',
-        });
+        res.redirect('/admin/office');
     } catch (e) {
-        res.render('admin/create-office', {
-            errors: ['Vui lòng kiểm tra lại tên'],
-        });
+        await req.flash('error', e.message);
+        res.redirect('/admin/office/create');
+        next(e);
     }
 };

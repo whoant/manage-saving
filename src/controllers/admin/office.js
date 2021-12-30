@@ -6,9 +6,9 @@ module.exports.get = async (req, res, next) => {
             attributes: ['id', 'name'],
             include: Staff,
         });
-
-        res.render('admin/office', { listOffices });
+        const messages = await req.consumeFlash('info');
+        res.render('admin/office', { listOffices, messages });
     } catch (e) {
-        console.log(e);
+        next(e);
     }
 };
