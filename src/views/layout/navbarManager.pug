@@ -14,7 +14,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
                 a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
                     | #{user.name}
                 .dropdown-menu.dropdown-menu-lg-right.dropdown(aria-labelledby='navbarDropdown')
-                    a.dropdown-item(href='#') Thông tin tài khoản
+                    form.form-inline.my-2.my-lg-0#info(action="/manager/info", method="get")
+                        a.dropdown-item(href="javascript:$('#info').submit()") Chỉnh sửa mật khẩu
                     .dropdown-divider
                     form.form-inline.my-2.my-lg-0#logout(action="/auth?_method=DELETE", method="post")
                         a.dropdown-item(href="javascript:$('#logout').submit()") Đăng xuất

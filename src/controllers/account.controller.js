@@ -62,7 +62,7 @@ module.exports.show = async (req, res, next) => {
             name: user.name,
         });
     } catch (e) {
-        console.error(e);
+        next(e);
     }
 };
 
@@ -88,7 +88,7 @@ module.exports.indexAccount = async (req, res, next) => {
         const errors = await req.consumeFlash('error');
         res.render('account/create', { getAccountsOfUser, listPeriodsRender, messages, errors });
     } catch (e) {
-        console.log(e);
+        next(e);
     }
 };
 
@@ -165,8 +165,8 @@ module.exports.createAccount = async (req, res, next) => {
         await req.flash('info', 'Mở tài khoản thành công !');
         res.redirect(`/staff/accounts/${id_user}/detail/${newSavingBook.id}`);
     } catch (e) {
-        console.error(e);
         res.redirect('back');
+        next(e);
     }
 };
 
@@ -201,8 +201,7 @@ module.exports.downloadSavingBook = async (req, res, next) => {
         res.setHeader(`Content-Disposition`, `attachment; filename=${infoAccount.id}.Pdf`);
         res.end(fileContents);
     } catch (e) {
-        console.error('=== downloadSavingBook ===');
-        console.error(e);
+        next(e);
     }
 };
 
@@ -235,7 +234,7 @@ module.exports.getDetailAccount = async (req, res, next) => {
 
         res.render('account/detail-account', infoAccount);
     } catch (e) {
-        console.log(e);
+        next(e);
     }
 };
 
@@ -276,7 +275,7 @@ module.exports.putDetailAccount = async (req, res, next) => {
         await req.flash('info', 'Tất toán thành công !');
         res.redirect('back');
     } catch (e) {
-        console.log(e);
+        next(e);
     }
 };
 

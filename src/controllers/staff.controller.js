@@ -1,5 +1,5 @@
 const { hash256 } = require('../utils');
-const { Staff } = require('../models');
+
 module.exports.get = (req, res, next) => {
     const { user } = res.locals;
     res.render('staff/index', {
