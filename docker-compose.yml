@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  manage-saving:
+    depends_on:
+      - mysqldb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT}
+    ports:
+      - 5000:${PORT}
+    stdin_open: true
+    tty: true
+  mysqldb:
+    image: mysql:5.6
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_PASS
+      MYSQL_DATABASE: $DB_NAME
+    ports:
+      - ${DB_PORT}:3307
+    volumes:
+      - mysql:/var/lib/mysql
+      - mysql_config:/etc/mysql
+volumes:
+  mysql:
+  mysql_config:

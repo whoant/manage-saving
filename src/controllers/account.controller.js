@@ -16,7 +16,8 @@ const STATE_ACCOUNT = require('../config/stateAccount');
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require('../config/message');
 const { Op } = require('sequelize');
 
-module.exports.index = async (req, res, next) => {};
+module.exports.index = async (req, res, next) => {
+};
 
 module.exports.show = async (req, res, next) => {
     const { id_user } = req.params;
@@ -49,7 +50,7 @@ module.exports.show = async (req, res, next) => {
                 interest: formatMoney(account.interest),
                 expirationDate: formatDate(account.expirationDate, 'VN'),
                 createdDate: formatDate(account.createdAt, 'VN'),
-                stateMessage: STATE_ACCOUNT_MESSAGE[account.state - 1],
+                stateMessage: STATE_ACCOUNT_MESSAGE[account.stat - 1],
                 accountTypeMessage: ONLINE_SAVING_MESSAGE[account.accountType - 1],
             };
         });
@@ -130,7 +131,7 @@ module.exports.createAccount = async (req, res, next) => {
         });
 
         const indexInterest = listPeriodsRender.findIndex(
-            (ele) => ele.Interests.id === interest_id
+            (ele) => ele.Interests.id === interest_id,
         );
         if (indexInterest === -1) {
             return res.redirect('back');
