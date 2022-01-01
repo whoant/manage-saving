@@ -20,6 +20,6 @@ block content
                         th(scope='col', width='30%') Số lượng nhân viên
                 tbody
                     if listOffices
-                        - var x = 1
-                            each office in listOffices
-                                +list(x++, office.id, office.name, office.Staffs.length)
+                      - var x = 1
+                      each office in listOffices
+                          +list(x++, office.id, office.name, office.Staffs.length)
