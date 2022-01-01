@@ -16,8 +16,7 @@ services:
       - 5000:${PORT}
     stdin_open: true
     tty: true
-    volumes:
-      - .:/app
+
   mysqldb:
     container_name: mysql-managing-saving
     image: mysql
