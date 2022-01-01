@@ -32,7 +32,7 @@ jobs:
         if: always()
         run: docker-compose down
       - name: Build images
-        run: docker-compose --build
+        run: docker-compose build
       - name: Run containers
         run: docker-compose up -d
 
