@@ -10,7 +10,7 @@ block navbar
 block content
     .row
         .col-12.mt-4
-            a.btn.btn-warning(href='/admin/office/create') Thêm chức vụ mới
+            a.btn.btn-warning(href='/admin/office/create') Thêm chức vụ mới 1
         .col-12.mt-2
             table.table.table-bordered.text-center
                 thead
@@ -20,6 +20,6 @@ block content
                         th(scope='col', width='30%') Số lượng nhân viên
                 tbody
                     if listOffices
-                        - var x = 1
-                            each office in listOffices
-                                +list(x++, office.id, office.name, office.Staffs.length)
+                      - var x = 1
+                      each office in listOffices
+                          +list(x++, office.id, office.name, office.Staffs.length)
