@@ -20,7 +20,7 @@ services:
       - .:/app
   mysqldb:
     container_name: mysql-managing-saving
-    image: mysql:5.7
+    image: mysql
     restart: unless-stopped
     env_file:
       - .env
