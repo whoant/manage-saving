@@ -2,15 +2,15 @@ const express = require('express');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { flash } = require('express-flash-message');
+const {flash} = require('express-flash-message');
 
 const path = require('path');
 
 const route = require('../routes');
-const { SESSION_SECRET } = require('../config');
+const {SESSION_SECRET} = require('../config');
 
 module.exports = (app) => {
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.urlencoded({extended: true}));
     app.use(express.json());
 
     app.use(methodOverride('_method'));
@@ -30,7 +30,7 @@ module.exports = (app) => {
             },
         })
     );
-    app.use(flash({ sessionKeyName: 'flashMessage' }));
+    app.use(flash({sessionKeyName: 'flashMessage'}));
 
     route(app);
     app.all('*', (req, res, next) => {

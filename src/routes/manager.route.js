@@ -1,6 +1,6 @@
 const express = require('express');
 const managerController = require('../controllers/manager.controller');
-
+const reportController = require('../controllers/report.controller');
 const route = express.Router();
 
 route.get('/', managerController.index);
@@ -15,5 +15,7 @@ route
     .route('/info')
     .get(managerController.getDetailPassword)
     .post(managerController.updatePassword);
+
+route.get('/report', reportController.index);
 
 module.exports = route;

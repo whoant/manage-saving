@@ -1,0 +1,31 @@
+extends ../layout/main.pug
+block navbar
+    include ../layout/navbarManager.pug
+block content
+    .row
+        .col-xl-12.col.md-12.col-12
+            .card.mt-2
+                .card-body
+                    h3.card-title.text-center Báo cáo
+                    .row
+                        .col-12
+                            .row.mt-2
+                                .form-group.col-lg-4.col-12
+                                    label(for="year") Năm
+                                    select.form-control#year(name="year")
+                                .form-group.col-lg-4.col-12
+                                    label(for="month") Tháng
+                                    select.form-control#month(name="month")
+                                .form-group.col-lg-4.col-12
+                                    label(for="day") Ngày
+                                    select.form-control#day(name="day")
+                            button.btn.btn-danger.float-right#btn-confirm Xác nhận
+                            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= id) Tải báo cáo
+            .card.mt-2
+                .card-body
+                    h3.card-title.text-center Báo cáo
+                    .row
+                        .col-12
+
+
+    script(src="/js/report.js")
