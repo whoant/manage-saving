@@ -98,8 +98,8 @@ module.exports.createAccount = async (req, res, next) => {
     const { user } = res.locals;
     try {
         if (
-          accountType < ONLINE_SAVING.INTEREST_RECEIVER &&
-          accountType > ONLINE_SAVING.CLOSING_ACCOUNT
+            accountType < ONLINE_SAVING.INTEREST_RECEIVER &&
+            accountType > ONLINE_SAVING.CLOSING_ACCOUNT
         ) {
             return res.redirect("back");
         }
@@ -131,7 +131,7 @@ module.exports.createAccount = async (req, res, next) => {
         });
 
         const indexInterest = listPeriodsRender.findIndex(
-          (ele) => ele.Interests.id === interest_id
+            (ele) => ele.Interests.id === interest_id
         );
         if (indexInterest === -1) {
             return res.redirect("back");
@@ -141,7 +141,7 @@ module.exports.createAccount = async (req, res, next) => {
 
         deposit = Number(deposit);
         let interest =
-          ((deposit * periodCurrent.Interests.factor) / 100 / 12) * periodCurrent.month;
+            ((deposit * periodCurrent.Interests.factor) / 100 / 12) * periodCurrent.month;
         accountType = Number(accountType);
         const customerId = id_user;
         const interestId = interest_id;
