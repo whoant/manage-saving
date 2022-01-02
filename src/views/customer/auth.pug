@@ -1,0 +1,18 @@
+extends ../layout/main.pug
+block content
+    .row
+        .col-12
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Manage Saving
+                    h5.card-title.text-center Xin kính chào quý khách
+                    .row
+                        .col-12
+                            form(action="/customer/auth", method="post")
+                                .form-group
+                                    label(for="username") Tài khoản
+                                    input#timeout.form-control(type="text", name="username", value= username ? username : "votuan")
+                                .form-group
+                                    label(for="password") Mật khẩu
+                                    input#timeout.form-control(type="password", name="password", value= password ? password : "votuan")
+                                button.btn.btn-primary.float-right Đăng nhập

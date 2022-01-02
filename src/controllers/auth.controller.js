@@ -1,8 +1,15 @@
-const { hash256 } = require('../utils');
-const { Staff, Office } = require('../models');
+const { hash256 } = require("../utils");
+const { Staff, Office } = require("../models");
 
-module.exports.get = (req, res, next) => {
-    res.render('auth/login');
+
+module.exports.get = async (req, res, next) => {
+    const { id } = req.signedCookies;
+
+    if (id) {
+        return res.redirect("back");
+    }
+    const errors = await req.consumeFlash("error");
+    res.render("auth/login", { errors });
 };
 
 module.exports.post = async (req, res, next) => {
@@ -11,26 +18,24 @@ module.exports.post = async (req, res, next) => {
     try {
         const checkUser = await Staff.findOne({
             where: {
-                username,
+                username
             },
-            include: Office,
+            include: Office
         });
 
         if (!checkUser || checkUser.password !== hash256(password)) {
-            return res.render('auth/login', {
-                username,
-                password,
-                errors: ['Vui lòng kiểm tra lại thông tin tài khoản !'],
-            });
+            await req.flash("error", "Vui lòng kiểm tra lại thông tin tài khoản !");
+            return res.redirect("/auth");
+
         }
 
-        res.cookie('id', checkUser.id, { signed: true });
+        res.cookie("id", checkUser.id, { signed: true });
 
-        if (checkUser.Office.short_name === 'nhan_vien') {
-            return res.redirect('/staff');
+        if (checkUser.Office.short_name === "nhan_vien") {
+            return res.redirect("/staff");
         }
-        if (checkUser.Office.short_name === 'giam_doc') {
-            return res.redirect('/manager');
+        if (checkUser.Office.short_name === "giam_doc") {
+            return res.redirect("/manager");
         }
     } catch (e) {
         console.log(e);
@@ -38,6 +43,6 @@ module.exports.post = async (req, res, next) => {
 };
 
 module.exports.delete = async (req, res) => {
-    res.clearCookie('id');
-    res.redirect('/auth');
+    res.clearCookie("id");
+    res.redirect("/auth");
 };
