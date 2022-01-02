@@ -1,26 +1,27 @@
-const { Staff, Office } = require('../models');
+const { Staff, Office, Customer, SavingsBook } = require("../models");
 
 module.exports.requireAuth = async (req, res, next) => {
     const { id } = req.signedCookies;
     if (!id) {
-        return res.redirect('/auth');
+        return res.redirect("/auth");
     }
 
     try {
         const checkUser = await Staff.findOne({
             where: {
-                id,
+                id
             },
-            include: Office,
+            include: Office
         });
 
         if (!checkUser) {
-            return res.redirect('/auth');
+            return res.redirect("/auth");
         }
 
         res.locals.user = checkUser;
         next();
-    } catch (e) {}
+    } catch (e) {
+    }
 };
 
 module.exports.requirePermissions = (permissions) => {
@@ -31,6 +32,31 @@ module.exports.requirePermissions = (permissions) => {
             return next();
         }
 
-        res.redirect('back');
+        res.redirect("back");
     };
+};
+
+module.exports.isCustomer = async (req, res, next) => {
+    const { id } = req.signedCookies;
+    if (!id) {
+        return res.redirect("/customer/auth");
+    }
+
+    try {
+        const checkCustomer = await Customer.findOne({
+            where: {
+                id
+            },
+            include: SavingsBook
+        });
+
+        if (!checkCustomer) {
+            return res.redirect("/customer/auth");
+        }
+
+        res.locals.user = checkCustomer;
+        next();
+    } catch (e) {
+    }
+
 };

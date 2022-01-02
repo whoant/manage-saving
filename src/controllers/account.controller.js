@@ -15,6 +15,7 @@ const STATE_ACCOUNT = require("../config/stateAccount");
 
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require("../config/message");
 const { Op } = require("sequelize");
+const mailer = require("../services/mailer");
 
 module.exports.index = async (req, res, next) => {
 };
@@ -270,9 +271,14 @@ module.exports.putDetailAccount = async (req, res, next) => {
             staffId: user.id,
             savingsBookId: id_account
         });
+
+
         await infoAccount.Customer.increment({
             balance: newBalance
         });
+
+        const html = `<b>${infoAccount.Customer.fullName}</b> thân mếm <br/> Tất toán tài khoản <b>${id_account}</b> thành công <br/> Cảm ơn quý khách đã dùng dịch vụ của chúng tôi`;
+        await mailer(infoAccount.Customer.email, "Tất toán tài khoản", html);
         await req.flash("info", "Tất toán thành công !");
         res.redirect("back");
     } catch (e) {
