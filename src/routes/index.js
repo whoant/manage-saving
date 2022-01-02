@@ -11,5 +11,5 @@ module.exports = app => {
     app.use("/manager", authMiddleware.requireAuth, authMiddleware.requirePermissions("giam_doc"), manageRoute);
     app.use("/admin", adminRoute);
     app.use("/auth", authRoute);
-    app.use("/customer", authMiddleware.isCustomer, customerRoute);
+    app.use("/customer", customerRoute);
 };
