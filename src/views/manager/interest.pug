@@ -4,7 +4,7 @@ mixin list(stt, interest)
     tr
         th(scope='row')= stt
         td= interest.name
-        td= interest.factor
+        td #{interest.factor}% / năm
         td= interest.Period.name
         td= interest.created
 
@@ -43,10 +43,10 @@ block content
                     .modal-body
                         .form-group
                             label(for="name") Tên lãi suất
-                            input#name.form-control(type="text", name="name", value= name ? name: "")
+                            input#name.form-control(type="text", name="name", value= name ? name : "")
                         .form-group
                             label(for="factor") Hệ số lãi suất / năm
-                            input#factor.form-control(type="text", name="factor", value= factor ? factor: "")
+                            input#factor.form-control(type="text", name="factor", value= factor ? factor : "")
                         .form-group
                             label(for="periodId") Loại kì hạn
                             select.form-control#periodId(name="periodId")

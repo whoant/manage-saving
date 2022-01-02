@@ -20,12 +20,20 @@ block content
                                     label(for="day") Ngày
                                     select.form-control#day(name="day")
                             button.btn.btn-danger.float-right#btn-confirm Xác nhận
-                            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= id) Tải báo cáo
+                            //a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= id) Tải báo cáo
             .card.mt-2
                 .card-body
-                    h3.card-title.text-center Báo cáo
+                    h3.card-title.text-center#show-day Báo cáo doanh số hoạt động ngày
                     .row
                         .col-12
-
+                            table.table.table-bordered.text-center
+                                thead
+                                    tr
+                                        th(scope='col', width='2%') #
+                                        th(scope='col') Loại tiết kiệm
+                                        th(scope='col') Tổng thu
+                                        th(scope='col') Tổng chi
+                                        th(scope='col') Chênh lệch
+                                tbody#tbody
 
     script(src="/js/report.js")
