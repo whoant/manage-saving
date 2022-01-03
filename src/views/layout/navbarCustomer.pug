@@ -1,5 +1,5 @@
 nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-    a.navbar-brand(href='/manager')
+    a.navbar-brand(href='/customer')
         | Khách hàng
     button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
         span.navbar-toggler-icon
@@ -13,5 +13,5 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
                     form.form-inline.my-2.my-lg-0#info(action="/customer/profile", method="get")
                         a.dropdown-item(href="javascript:$('#info').submit()") Chỉnh sửa mật khẩu
                     .dropdown-divider
-                    form.form-inline.my-2.my-lg-0#logout(action="/auth?_method=DELETE", method="post")
+                    form.form-inline.my-2.my-lg-0#logout(action="/customer/auth?_method=DELETE", method="post")
                         a.dropdown-item(href="javascript:$('#logout').submit()") Đăng xuất

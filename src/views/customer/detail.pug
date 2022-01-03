@@ -1,0 +1,39 @@
+extends ../layout/main.pug
+
+block navbar
+    include ../layout/navbarCustomer.pug
+block content
+    .row
+        .card.mt-3
+            .card-body
+                h3.card-title.text-center Chi tiết tài khoản tiết kiệm
+                .row
+                    .col-12
+
+                        .row
+                            .form-group.col-lg-4.col-12
+                                label(for="account_id") Số tài khoản
+                                input#account_id.form-control(type="text", name="account_id", value= detailSavingsBook.id, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="deposit") Số tiền gửi
+                                input#deposit.form-control(type="text", name="deposit", value= detailSavingsBook.deposit, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="interest") Lãi cuối kì
+                                input#interest.form-control(type="text", name="interest", value= detailSavingsBook.interest, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="month") Kì hạn
+                                input#month.form-control(type="text", name="month", value= detailSavingsBook.typeInterest, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="factor") Lãi suất
+                                input#factor.form-control(type="text", name="factor", value= detailSavingsBook.typeDeposit, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="expirationDate") Loại kì hạn
+                                input#expirationDate.form-control(type="text", name="expirationDate", value= detailSavingsBook.accountType, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="createdAt") Ngày tạo
+                                input#createdAt.form-control(type="text", name="createdAt", value= detailSavingsBook.created, disabled)
+                            .form-group.col-lg-4.col-12
+                                label(for="expirationDate") Ngày tới hạn
+                                input#expirationDate.form-control(type="text", name="expirationDate", value= detailSavingsBook.expirated, disabled)
+
+

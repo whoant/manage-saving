@@ -10,6 +10,7 @@ const route = require("../routes");
 const { SESSION_SECRET } = require("../config");
 
 module.exports = (app) => {
+    
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
 
@@ -18,7 +19,7 @@ module.exports = (app) => {
     app.set("views", path.join(__dirname, "../", "views"));
 
     app.use(express.static(path.join(__dirname, "../", "public")));
-    app.use("/css", express.static(path.join(__dirname, "../", "public", "css")));
+    // app.use("/css", express.static(path.join(__dirname, "../", "public", "css")));
     app.use(cookieParser(SESSION_SECRET));
     app.use(
         session({
@@ -34,6 +35,6 @@ module.exports = (app) => {
 
     route(app);
     app.all("*", (req, res, next) => {
-        res.redirect("back");
+        res.send("ERROR");
     });
 };

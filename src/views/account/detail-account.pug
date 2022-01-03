@@ -1,7 +1,7 @@
-extends ../layout/main.pug
+extends ../layout/main
 
 block navbar
-    include ../layout/navbarStaff.pug
+    include ../layout/navbarStaff
 block content
     .row
         .col-xl-12.col.md-12.col-12
@@ -34,7 +34,7 @@ block content
                                         label(for="deposit") Số tiền gửi
                                         input#deposit.form-control(type="text", name="deposit", value= deposit, disabled)
                                     .form-group.col-lg-4.col-12
-                                        label(for="interest") Số tiền lãi
+                                        label(for="interest") Lãi cuối kì
                                         input#interest.form-control(type="text", name="interest", value= interest, disabled)
                                     .form-group.col-lg-4.col-12
                                         label(for="month") Kì hạn

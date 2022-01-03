@@ -10,6 +10,6 @@ module.exports = app => {
     app.use("/staff", authMiddleware.requireAuth, authMiddleware.requirePermissions("nhan_vien"), staffRoute);
     app.use("/manager", authMiddleware.requireAuth, authMiddleware.requirePermissions("giam_doc"), manageRoute);
     app.use("/admin", adminRoute);
-    app.use("/auth", authRoute);
     app.use("/customer", customerRoute);
+    app.use("/auth", authRoute);
 };
