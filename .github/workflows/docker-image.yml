@@ -28,5 +28,5 @@ jobs:
       - name: Stop containers
         run: docker-compose down
       - name: Run containers
-        run: docker-compose up -it --build
+        run: docker-compose up -d --build
 
