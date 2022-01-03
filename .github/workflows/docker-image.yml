@@ -26,5 +26,5 @@ jobs:
           echo MAIL_USER=${{secrets.MAIL_USER}}>> .env
           echo MAIL_PASS=${{secrets.MAIL_PASS}}>> .env
       - name: Run containers
-        run: yarn docker-production
+        run: npm run docker-production
 
