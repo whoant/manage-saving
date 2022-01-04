@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon --inspect src/app.js"
+    "dev": "nodemon -L --inspect src/app.js",
+    "docker-development": "docker-compose down & docker-compose up --build",
+    "docker-production": "docker-compose down & docker-compose up -d --build"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "exact": "^0.8.0",
+    "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
   }
 }

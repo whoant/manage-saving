@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ staging ]
-  pull_request:
-    branches: [ staging ]
 
 jobs:
 
@@ -27,10 +25,7 @@ jobs:
           echo SESSION_SECRET=${{secrets.SESSION_SECRET}}>> .env
           echo MAIL_USER=${{secrets.MAIL_USER}}>> .env
           echo MAIL_PASS=${{secrets.MAIL_PASS}}>> .env
-      - name: Get location
-        run: pwd
       - name: Stop containers
-        if: always()
         run: docker-compose down
       - name: Run containers
         run: docker-compose up -d --build

@@ -1,0 +1,22 @@
+extends ../layout/main.pug
+block navbar
+    include ../layout/navbarCustomer.pug
+block content
+    .row
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-header.text-center Thông tin chung
+                .card-body
+                    .row.d-flex.justify-content-center
+                        .col-xl-10.col-10.mt-4
+                            .card
+                                .card-body.d-flex.flex-row.justify-content-between.align-items-center
+                                    h5 Số dư khả dụng
+                                    h4.card-title.deposit #{balance}
+                        .col-xl-10.col-10.mt-4
+                            .card
+                                .card-body.d-flex.flex-row.justify-content-between.align-items-center
+                                    .d-flex.flex-column
+                                        h5 Số tiền tiết kiệm
+                                        p Bạn có #{total} tài khoản  tiết kiệm
+                                    a.card-title.money.deposit(href="customer/history") #{amount}

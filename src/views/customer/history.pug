@@ -1,0 +1,26 @@
+extends ../layout/main.pug
+
+mixin list(account)
+    .col-xl-10.col-10.mt-4
+        .card
+            .card-body.d-flex.flex-row.justify-content-between.align-items-center
+                .d-flex.flex-column.justify-content-between
+                    a.money(href="/customer/history/" + account.id ) #{account.id}
+                    p Ngày đến hạn: #{account.expirationDate}
+                .d-flex.flex-column.justify-content-between
+                    h5.deposit #{account.deposit}
+                    p Còn #{account.countDown} ngày
+
+block navbar
+    include ../layout/navbarCustomer.pug
+block content
+    .row
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-header.text-center Danh sách tài khoản tiết kiệm
+                .card-body
+                    .row.d-flex.justify-content-center
+                        if accountsRender
+                            each account in accountsRender
+                                +list(account)
+

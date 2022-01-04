@@ -1,0 +1,25 @@
+extends ../layout/main.pug
+block navbar
+    include ../layout/navbarCustomer.pug
+block content
+    .row
+
+        .col-xl-12.col.md-12.col-12
+            .card.mt-5
+                .card-body
+                    h3.card-title.text-center Chỉnh sửa mật khẩu
+                    .row
+                        .col-12
+                            form(action="/customer/profile", method="post")
+                                .row
+                                    .form-group.col-lg-12.col-12
+                                        label(for="old-password") Mật khẩu cũ
+                                        input#old-password.form-control(type="text", name="oldPassword", value= oldPassword ? oldPassword : "")
+                                    .form-group.col-lg-12.col-12
+                                        label(for="new-password") Mật khẩu mới
+                                        input#new-password.form-control(type="text", name="newPassword", value= newPassword ? newPassword : "")
+                                    .form-group.col-lg-12.col-12
+                                        label(for="repeat-password") Nhập lại mật khẩu mới
+                                        input#repeat-password.form-control(type="text", name="repeatPassword", value= repeatPassword ? repeatPassword : "")
+
+                                button.btn.btn-danger.float-right Cập nhập mật khẩu

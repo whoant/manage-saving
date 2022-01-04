@@ -15,6 +15,7 @@ const STATE_ACCOUNT = require("../config/stateAccount");
 
 const { STATE_ACCOUNT_MESSAGE, ONLINE_SAVING_MESSAGE } = require("../config/message");
 const { Op } = require("sequelize");
+const mailer = require("../services/mailer");
 
 module.exports.index = async (req, res, next) => {
 };
@@ -104,14 +105,16 @@ module.exports.createAccount = async (req, res, next) => {
             return res.redirect("back");
         }
 
-        const MIN_DEPOSIT = await Var.findOne({
+        const varMinDeposit = await Var.findOne({
             where: {
                 name: "min_deposit"
             }
         });
 
-        if (Number(deposit) < MIN_DEPOSIT.value) {
-            await req.flash("error", `Số tiền phải lớn hơn ${formatMoney(MIN_DEPOSIT.value)}`);
+        const MIN_DEPOSIT = varMinDeposit?.value || "1000000";
+
+        if (Number(deposit) < MIN_DEPOSIT) {
+            await req.flash("error", `Số tiền phải lớn hơn ${formatMoney(MIN_DEPOSIT)}`);
             return res.redirect("back");
         }
 
@@ -270,9 +273,14 @@ module.exports.putDetailAccount = async (req, res, next) => {
             staffId: user.id,
             savingsBookId: id_account
         });
+
+
         await infoAccount.Customer.increment({
             balance: newBalance
         });
+
+        const html = `<b>${infoAccount.Customer.fullName}</b> thân mếm <br/> Tất toán tài khoản <b>${id_account}</b> thành công <br/> Cảm ơn quý khách đã dùng dịch vụ của chúng tôi`;
+        await mailer(infoAccount.Customer.email, "Tất toán tài khoản", html);
         await req.flash("info", "Tất toán thành công !");
         res.redirect("back");
     } catch (e) {
