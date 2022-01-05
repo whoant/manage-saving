@@ -22,7 +22,7 @@ block content
                     tr
                         th(scope='col', width='2%') #
                         th(scope='col') Tên lãi suất
-                        th(scope='col') Hệ số
+                        th(scope='col') Lãi suất
                         th(scope='col') Loại kì hạn
                         th(scope='col') Ngày hiệu lực
                 tbody
@@ -45,7 +45,7 @@ block content
                             label(for="name") Tên lãi suất
                             input#name.form-control(type="text", name="name", value= name ? name : "")
                         .form-group
-                            label(for="factor") Hệ số lãi suất / năm
+                            label(for="factor") Lãi suất / năm
                             input#factor.form-control(type="text", name="factor", value= factor ? factor : "")
                         .form-group
                             label(for="periodId") Loại kì hạn
