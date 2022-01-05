@@ -53,13 +53,22 @@ class CustomerController {
             });
             amount = formatMoney(amount);
 
+            const listPeriods = await getListPeriods();
+            const listPeriodsRender = [];
+            covertPlainObject(listPeriods).forEach((period) => {
+                if (period.Interests.length !== 0) {
+                    listPeriodsRender.push({ ...period, Interests: period.Interests[0] });
+                }
+            });
+            
             const messages = await req.consumeFlash("info");
 
             res.render("customer/index", {
                 total,
                 balance,
                 amount,
-                messages
+                messages,
+                listPeriodsRender
             });
 
         } catch (e) {
@@ -159,6 +168,16 @@ class CustomerController {
         }
     }
 
+}
+
+function getListPeriods() {
+    return Period.findAll({
+        include: Interest,
+        order: [
+            ["month", "ASC"],
+            [Interest, "createdAt", "DESC"]
+        ]
+    });
 }
 
 module.exports = new CustomerController();

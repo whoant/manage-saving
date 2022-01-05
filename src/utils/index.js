@@ -38,36 +38,32 @@ const randomCharacters = (length) => {
     return result;
 };
 
-const generateDeposit = async ({
-                                   id,
-                                   name,
-                                   type,
-                                   createdAt,
-                                   expirationDate,
-                                   interest,
-                                   totalAmount,
-                                   typeDeposit,
-                                   deposit
-                               }) => {
-    try {
-        const content = compiledFunction({
-            id,
-            type,
-            name,
-            createdAt,
-            expirationDate,
-            interest,
-            totalAmount,
-            typeDeposit,
-            deposit
-        });
+const generateDeposit = ({
+                             id,
+                             name,
+                             type,
+                             createdAt,
+                             expirationDate,
+                             interest,
+                             totalAmount,
+                             typeDeposit,
+                             deposit
+                         }) => {
 
-        const options = { format: "A4" };
-        const pdfBuffer = await html_to_pdf.generatePdf({ content }, options);
-        return pdfBuffer;
-    } catch (e) {
-        return Promise.reject(e);
-    }
+    const content = compiledFunction({
+        id,
+        type,
+        name,
+        createdAt,
+        expirationDate,
+        interest,
+        totalAmount,
+        typeDeposit,
+        deposit
+    });
+
+    const options = { format: "A4" };
+    return html_to_pdf.generatePdf({ content }, options);
 };
 
 module.exports = {

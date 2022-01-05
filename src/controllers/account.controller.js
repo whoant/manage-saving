@@ -73,8 +73,11 @@ module.exports.indexAccount = async (req, res, next) => {
     try {
         const getAccountsOfUser = await getUser(id_user);
 
-        const listPeriods = await getListPeriods();
+        if (!getAccountsOfUser) {
+            return res.redirect("/staff/users");
+        }
 
+        const listPeriods = await getListPeriods();
         const listPeriodsRender = [];
         covertPlainObject(listPeriods).forEach((period) => {
             if (period.Interests.length !== 0) {
@@ -82,9 +85,6 @@ module.exports.indexAccount = async (req, res, next) => {
             }
         });
 
-        if (!getAccountsOfUser) {
-            return res.redirect("/staff/users");
-        }
 
         const messages = await req.consumeFlash("info");
         const errors = await req.consumeFlash("error");
