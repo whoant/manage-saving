@@ -1,22 +1,24 @@
 const express = require("express");
-const adminController = require("../controllers/admin");
+const adminController = require("../controllers/admin.controller");
+const officeController = require("../controllers/office.controller");
+const personnelController = require("../controllers/personnel.controller");
 const route = express.Router();
 
-route.get("/", adminController.home.get);
+route.get("/", adminController.index);
 
-route.get("/user", adminController.user.getAll);
+route.route("/info").get(adminController.getFormChangePass).post(adminController.updatePass);
 
-route.get("/user/:id/edit", adminController.user.getDetail);
+route.get("/personnel", personnelController.getAll);
 
-route.put("/user/:id", adminController.user.updateUser);
+route.get("/personnel/:id/edit", personnelController.getDetail);
 
-route.route("/user/create").get(adminController.createUser.get).post(adminController.createUser.post);
+route.put("/personnel/:id", personnelController.updatePersonnel);
 
-route.get("/office", adminController.office.get);
+route.route("/personnel/create").get(personnelController.getCreatePersonnel).post(personnelController.postCreatePersonnel);
 
-route.get("/office/create", adminController.createOffice.get);
+route.get("/office", officeController.index);
 
-route.route("/office/create").get(adminController.createOffice.get).post(adminController.createOffice.post);
+route.route("/office/create").get(officeController.getFormCreate).post(officeController.postFormCreate);
 
 
 module.exports = route;

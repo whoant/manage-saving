@@ -8,7 +8,7 @@ const STATE_ACCOUNT = require("../config/stateAccount");
 
 module.exports = cron.schedule("*/2 * * * * *", async () => {
     try {
-        console.log("=== JOB ===");
+        // console.log("=== JOB ===");
         const listSavingsBooks = await SavingsBook.findAll({
             where: {
                 expirationDate: {

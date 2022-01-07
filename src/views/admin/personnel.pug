@@ -4,11 +4,11 @@ mixin list(stt, id, name, user, office)
     tr
         th(scope='row')= stt
         td
-            a(href='/admin/user/' + id + '/edit')= name
+            a(href='/admin/personnel/' + id + '/edit')= name
         td= user
         td= office
         td
-            a.btn.btn-primary.mr-2(href='/admin/user/' + id + '/edit')
+            a.btn.btn-primary.mr-2(href='/admin/personnel/' + id + '/edit')
                 | Chỉnh sửa
             a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id)
                 | Xoá
@@ -18,11 +18,11 @@ block navbar
 block content
     .row.mt-4
         .col-6
-            a.btn.btn-warning(href='/admin/user/create') Thêm nhân viên mới
+            a.btn.btn-warning(href='/admin/personnel/create') Thêm nhân viên mới
         .col-6
-            form(action="/admin/user", method="get")
+            form(action="/admin/personnel", method="get")
                 .form-group
-                    input#name.form-control(type="text", name="search", placeholder="Nhập tên cần tìm kiếm", value= search ? search: "")
+                    input#name.form-control(type="text", name="search", placeholder="Nhập tên cần tìm kiếm", value= search ? search : "")
         .col-12.mt-2
             table.table.table-bordered.text-center
                 thead
@@ -69,7 +69,7 @@ block content
             });
 
             document.getElementById('btn-delete-user').addEventListener('click', () => {
-                deleteForm.action = '/admin/staff/' + idUser  + '?_method=DELETE';
+                deleteForm.action = '/admin/personnel/' + idUser + '?_method=DELETE';
                 deleteForm.submit();
             });
 

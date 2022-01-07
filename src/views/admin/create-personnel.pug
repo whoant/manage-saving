@@ -11,24 +11,24 @@ block content
                     .row
                         .col-12
 
-                            form(action="/admin/user/create", method="post")
+                            form(action="/admin/personnel/create", method="post")
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="name") Họ và tên
-                                        input#name.form-control(type="text", name="name", value= name ? name: "")
+                                        input#name.form-control(type="text", name="name", value= name ? name : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="username") Tài khoản
-                                        input#username.form-control(type="text", name="username", value= username ? username: "")
+                                        input#username.form-control(type="text", name="username", value= username ? username : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="password") Mật khẩu
-                                        input#password.form-control(type="text", name="password", value= password ? password: "")
+                                        input#password.form-control(type="text", name="password", value= password ? password : "")
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="email") Email
-                                        input#email.form-control(type="text", name="email", value= email ? email: "")
+                                        input#email.form-control(type="text", name="email", value= email ? email : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="phone") Số điện thoại
-                                        input#phone.form-control(type="text", name="phone", value= phone ? phone: "")
+                                        input#phone.form-control(type="text", name="phone", value= phone ? phone : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="sex") Giới tính
                                         select.form-control#sex(name="sex")
@@ -37,10 +37,10 @@ block content
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="address") Địa chỉ
-                                        input#address.form-control(type="text", name="address", value= address ? address: "")
+                                        input#address.form-control(type="text", name="address", value= address ? address : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="birthday") Ngày sinh
-                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday: "")
+                                        input#birthday.form-control(type="date", name="birthday", value= birthday ? birthday : "")
                                     .form-group.col-lg-4.col-12
                                         label(for="officeId") Chức vụ
                                         select.form-control#officeId(name="officeId")

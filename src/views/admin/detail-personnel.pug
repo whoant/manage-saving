@@ -10,7 +10,7 @@ block content
                     .row
                         .col-12
 
-                            form(action="/admin/user/"+ staff.id +"?_method=PUT", method="post")
+                            form(action="/admin/personnel/" + staff.id + "?_method=PUT", method="post")
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="name") Họ và tên
@@ -43,10 +43,10 @@ block content
                                     .form-group.col-lg-4.col-12
                                         label(for="officeId") Chức vụ
                                         select.form-control#officeId(name="officeId")
-                                                each office in listOffices
-                                                    if office.id == staff.officeId
-                                                        option(value= office.id, selected)= office.name
-                                                    else
-                                                        option(value= office.id)= office.name
+                                            each office in listOffices
+                                                if office.id == staff.officeId
+                                                    option(value= office.id, selected)= office.name
+                                                else
+                                                    option(value= office.id)= office.name
                                 button.btn.btn-primary Reset mật khẩu
                                 button.btn.btn-danger.float-right Cập nhập thông tin nhân viên
