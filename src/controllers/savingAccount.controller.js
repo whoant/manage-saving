@@ -1,19 +1,19 @@
-const { Customer, SavingsBook, Interest, Period, FormCreate, FormClose } = require('../models');
+const { Customer, SavingsBook, Interest, Period, FormCreate, FormClose } = require("../models");
 
-const mailer = require('../services/mailer');
-const ONLINE_SAVING = require('../config/onlineSaving');
-const STATE_ACCOUNT = require('../config/stateAccount');
-const { Op } = require('sequelize');
-const moment = require('moment');
-const { covertPlainObject } = require('../utils');
+const mailer = require("../services/mailer");
+const ONLINE_SAVING = require("../config/onlineSaving");
+const STATE_ACCOUNT = require("../config/stateAccount");
+const { Op } = require("sequelize");
+const moment = require("moment");
+const { covertPlainObject } = require("../utils");
 
 class SavingAccountController {
     async index(req, res, next) {
         const { user } = res.locals;
         try {
-            const messages = await req.consumeFlash('info');
+            const messages = await req.consumeFlash("info");
             const listSavingsBooks = await getAllSavingsBooks();
-            res.render('savingAccount/index', { listSavingsBooks, messages, user });
+            res.render("savingAccount/index", { listSavingsBooks, messages, user });
         } catch (e) {
             next(e);
         }
@@ -31,7 +31,7 @@ class SavingAccountController {
 
             const [listSavingsBooks, listPeriods] = await Promise.all([
                 getAllSavingsBooks(),
-                getListPeriods(),
+                getListPeriods()
             ]);
             const listPeriodsRender = [];
             covertPlainObject(listPeriods).forEach((period) => {
@@ -50,14 +50,14 @@ class SavingAccountController {
                 createFormClose.push(
                     FormClose.create({
                         staffId: user.id,
-                        savingsBookId: id,
+                        savingsBookId: id
                     })
                 );
 
                 updateSavingsBooks.push(
                     savingsBook.update({
-                        state: STATE_ACCOUNT.ON_TIME,
-                        closingDate: moment().toDate(),
+                        state: STATE_ACCOUNT.FINISHED,
+                        closingDate: moment().toDate()
                     })
                 );
 
@@ -66,7 +66,7 @@ class SavingAccountController {
                 if (accountType === ONLINE_SAVING.INTEREST_RECEIVER) {
                     autoIncrementMoney.push(
                         Customer.increment({
-                            balance: interest,
+                            balance: interest
                         })
                     );
 
@@ -76,7 +76,7 @@ class SavingAccountController {
                 const { Interests, month } = listPeriodsRender[indexPeriod];
 
                 const newInterest = ((depositCurrent * Interests.factor) / 100 / 12) * month;
-                const newExpirationDate = moment().add(month, 'M').toDate();
+                const newExpirationDate = moment().add(month, "M").toDate();
                 const newClosingDate = newExpirationDate;
 
                 const interestId = Interests.id;
@@ -88,13 +88,13 @@ class SavingAccountController {
                     expirationDate: newExpirationDate,
                     closingDate: newClosingDate,
                     customerId,
-                    interestId,
+                    interestId
                 };
 
                 createSavingsBooks.push(SavingsBook.create(newSavingBook));
 
                 const html = `<b>${Customer.fullName}</b> thân mếm <br/> Tất toán tài khoản <b>${id}</b> thành công <br/> Cảm ơn quý khách đã dùng dịch vụ của chúng tôi`;
-                sendMail.push(mailer(Customer.email, 'Tất toán tài khoản', html));
+                sendMail.push(mailer(Customer.email, "Tất toán tài khoản", html));
             });
 
             await Promise.all(createFormClose);
@@ -110,13 +110,13 @@ class SavingAccountController {
                 createFormCreate.push(
                     FormCreate.create({
                         savingsBookId: newSavingBook.id,
-                        staffId: user.id,
+                        staffId: user.id
                     })
                 );
             });
             await Promise.all(createFormCreate);
 
-            await req.flash('info', 'Duyệt hết tài khoản thành công !');
+            await req.flash("info", "Duyệt hết tài khoản thành công !");
             res.redirect(`/staff/saving-account`);
         } catch (e) {
             console.log(e);
@@ -128,15 +128,12 @@ class SavingAccountController {
 function getAllSavingsBooks() {
     return SavingsBook.findAll({
         where: {
-            state: STATE_ACCOUNT.PENDING,
+            state: STATE_ACCOUNT.PROCESSING,
             accountType: {
-                [Op.or]: [ONLINE_SAVING.INTEREST_RECEIVER, ONLINE_SAVING.ROLLOVER_BOTH],
-            },
-            expirationDate: {
-                [Op.lte]: moment().toDate(),
-            },
+                [Op.or]: [ONLINE_SAVING.INTEREST_RECEIVER, ONLINE_SAVING.ROLLOVER_BOTH]
+            }
         },
-        include: [{ model: Customer }, { model: Interest, include: [{ model: Period }] }],
+        include: [{ model: Customer }, { model: Interest, include: [{ model: Period }] }]
     });
 }
 
@@ -144,9 +141,9 @@ function getListPeriods() {
     return Period.findAll({
         include: Interest,
         order: [
-            ['month', 'ASC'],
-            [Interest, 'createdAt', 'DESC'],
-        ],
+            ["month", "ASC"],
+            [Interest, "createdAt", "DESC"]
+        ]
     });
 }
 

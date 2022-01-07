@@ -46,19 +46,19 @@ class ReportController {
             });
 
             const interestReceiver = {
-                name: ONLINE_SAVING_MESSAGE[INTEREST_RECEIVER - 1],
+                name: ONLINE_SAVING_MESSAGE[INTEREST_RECEIVER],
                 in: 0,
                 out: 0,
                 diff: 0
             };
             const rolloverBoth = {
-                name: ONLINE_SAVING_MESSAGE[ROLLOVER_BOTH - 1],
+                name: ONLINE_SAVING_MESSAGE[ROLLOVER_BOTH],
                 in: 0,
                 out: 0,
                 diff: 0
             };
             const closingAccount = {
-                name: ONLINE_SAVING_MESSAGE[CLOSING_ACCOUNT - 1],
+                name: ONLINE_SAVING_MESSAGE[CLOSING_ACCOUNT],
                 in: 0,
                 out: 0,
                 diff: 0

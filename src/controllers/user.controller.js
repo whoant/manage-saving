@@ -35,7 +35,7 @@ module.exports.get = async (req, res, next) => {
         let total = 0;
         let amount = 0;
         customer.SavingsBooks.forEach((book) => {
-            if (book.state === STATE_ACCOUNT.PENDING) {
+            if (book.state === STATE_ACCOUNT.PENDING || book.state === STATE_ACCOUNT.PROCESSING) {
                 amount += book.deposit;
                 total += 1;
             }
@@ -88,7 +88,7 @@ module.exports.createUser = async (req, res, next) => {
             const subject = "Tạo tài khoản thành công !";
             const html = `Chúc mừng bạn <b>${fullName}</b>, bạn đã tạo tài khoản thành công <br/> Mật khẩu mặc định của bạn: <b>${password}</b>`;
             await mailer(email, subject, html);
-            
+
             await req.flash("info", "Tạo khách hàng thành công !");
             res.redirect("/staff/users");
         } catch (e) {

@@ -35,7 +35,7 @@ module.exports.show = async (req, res, next) => {
                     [Op.like]: `%${search}%`
                 },
                 state: {
-                    [Op.or]: [STATE_ACCOUNT.PENDING, STATE_ACCOUNT.FINISHED]
+                    [Op.or]: [STATE_ACCOUNT.PENDING, STATE_ACCOUNT.PROCESSING]
                 }
             },
             order: [["createdAt", "DESC"]]
@@ -51,8 +51,8 @@ module.exports.show = async (req, res, next) => {
                 interest: formatMoney(account.interest),
                 expirationDate: formatDate(account.expirationDate, "VN"),
                 createdDate: formatDate(account.createdAt, "VN"),
-                stateMessage: STATE_ACCOUNT_MESSAGE[account.state - 1],
-                accountTypeMessage: ONLINE_SAVING_MESSAGE[account.accountType - 1]
+                stateMessage: STATE_ACCOUNT_MESSAGE[account.state],
+                accountTypeMessage: ONLINE_SAVING_MESSAGE[account.accountType]
             };
         });
         const messages = await req.consumeFlash("info");
@@ -102,7 +102,8 @@ module.exports.createAccount = async (req, res, next) => {
             accountType < ONLINE_SAVING.INTEREST_RECEIVER &&
             accountType > ONLINE_SAVING.CLOSING_ACCOUNT
         ) {
-            return res.redirect("back");
+            throw new Error("Invalid type account");
+
         }
 
         const varMinDeposit = await Var.findOne({
@@ -186,19 +187,30 @@ module.exports.downloadSavingBook = async (req, res, next) => {
             nest: true,
             raw: true
         });
-        const typeDeposit = `${infoAccount.Interest.Period.month} tháng & ${infoAccount.Interest.factor}% năm`;
+        const typeDeposit = `${infoAccount.Interest.Period.month} tháng / ${infoAccount.Interest.factor}% năm`;
+
+        let typeExport = "deposit";
+
+        if (infoAccount.state === STATE_ACCOUNT.FINISHED) {
+            if (infoAccount.expirationDate > moment().toDate()) {
+                infoAccount.interest = 0;
+            }
+            typeExport = "bill";
+        }
+
 
         const genPdf = await generateDeposit({
             id: infoAccount.id,
             name: infoAccount.Customer.fullName,
-            type: ONLINE_SAVING_MESSAGE[infoAccount.accountType - 1],
+            type: ONLINE_SAVING_MESSAGE[infoAccount.accountType],
             expirationDate: formatDate(infoAccount.expirationDate, "VN"),
             createdAt: formatDate(infoAccount.createdAt, "VN"),
             deposit: formatMoney(infoAccount.deposit),
             interest: formatMoney(infoAccount.interest),
             totalAmount: formatMoney(infoAccount.deposit + infoAccount.interest),
+            today: formatDate(moment().toDate(), "VN"),
             typeDeposit
-        });
+        }, typeExport);
         const fileContents = Buffer.from(genPdf, "base64");
 
         res.setHeader("Content-Type", "application/pdf");
@@ -218,7 +230,6 @@ module.exports.getDetailAccount = async (req, res, next) => {
                 customerId: id_user,
                 id: id_account
             },
-
             include: [{ model: Customer }, { model: Interest, include: [{ model: Period }] }],
             nest: true,
             raw: true
@@ -228,10 +239,10 @@ module.exports.getDetailAccount = async (req, res, next) => {
         infoAccount.interest = formatMoney(infoAccount.interest);
         infoAccount.createdAt = formatDate(infoAccount.createdAt, "VN");
         infoAccount.expirationDate = formatDate(infoAccount.expirationDate, "VN");
-        infoAccount.accountTypeMessage = ONLINE_SAVING_MESSAGE[infoAccount.accountType - 1];
+        infoAccount.accountTypeMessage = ONLINE_SAVING_MESSAGE[infoAccount.accountType];
         infoAccount.closingDate = formatDate(infoAccount.closingDate, "VN");
-        if (infoAccount.state === STATE_ACCOUNT.PENDING) {
-            infoAccount.closingDate = "Chưa kết thúc";
+        if (infoAccount.state === STATE_ACCOUNT.PENDING || infoAccount.state === STATE_ACCOUNT.PROCESSING) {
+            infoAccount.closingDate = "Chưa đóng";
         }
         infoAccount.name = user.name;
         infoAccount.messages = await req.consumeFlash("info");
@@ -260,12 +271,12 @@ module.exports.putDetailAccount = async (req, res, next) => {
 
         let newBalance = infoAccount.deposit;
 
-        if (infoAccount.state === STATE_ACCOUNT.FINISHED) {
+        if (infoAccount.state === STATE_ACCOUNT.PROCESSING) {
             newBalance += infoAccount.interest;
         }
 
         await infoAccount.update({
-            state: STATE_ACCOUNT.ON_TIME,
+            state: STATE_ACCOUNT.FINISHED,
             closingDate: moment().toDate()
         });
 
@@ -280,7 +291,7 @@ module.exports.putDetailAccount = async (req, res, next) => {
         });
 
         const html = `<b>${infoAccount.Customer.fullName}</b> thân mếm <br/> Tất toán tài khoản <b>${id_account}</b> thành công <br/> Cảm ơn quý khách đã dùng dịch vụ của chúng tôi`;
-        await mailer(infoAccount.Customer.email, "Tất toán tài khoản", html);
+        await mailer(infoAccount.Customer.email, "Xác nhận tất toán tài khoản thành công!", html);
         await req.flash("info", "Tất toán thành công !");
         res.redirect("back");
     } catch (e) {

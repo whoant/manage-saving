@@ -3,7 +3,6 @@ const html_to_pdf = require("html-pdf-node");
 const pug = require("pug");
 const path = require("path");
 
-const compiledFunction = pug.compileFile(path.join(__dirname, "..", "static", "deposit.pug"));
 
 const hash256 = (text) => {
     return crypto.createHash("sha256").update(text).digest("hex");
@@ -47,8 +46,12 @@ const generateDeposit = ({
                              interest,
                              totalAmount,
                              typeDeposit,
-                             deposit
-                         }) => {
+                             deposit,
+                             today
+                         }, typeExport = "deposit") => {
+    let fileName = "deposit.pug";
+    if (typeExport === "bill") fileName = "bill.pug";
+    const compiledFunction = pug.compileFile(path.join(__dirname, "..", "static", fileName));
 
     const content = compiledFunction({
         id,
@@ -59,7 +62,8 @@ const generateDeposit = ({
         interest,
         totalAmount,
         typeDeposit,
-        deposit
+        deposit,
+        today
     });
 
     const options = { format: "A4" };

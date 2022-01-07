@@ -46,7 +46,7 @@ class CustomerController {
             const balance = formatMoney(user.balance);
             let amount = 0;
             user.SavingsBooks.forEach((book) => {
-                if (book.state === STATE_ACCOUNT.PENDING) {
+                if (book.state === STATE_ACCOUNT.PENDING || book.state === STATE_ACCOUNT.PROCESSING) {
                     amount += book.deposit;
                     total += 1;
                 }
@@ -60,7 +60,7 @@ class CustomerController {
                     listPeriodsRender.push({ ...period, Interests: period.Interests[0] });
                 }
             });
-            
+
             const messages = await req.consumeFlash("info");
 
             res.render("customer/index", {
@@ -114,7 +114,7 @@ class CustomerController {
                 where: {
                     customerId: user.id,
                     state: {
-                        [Op.or]: [STATE_ACCOUNT.PENDING, STATE_ACCOUNT.FINISHED]
+                        [Op.or]: [STATE_ACCOUNT.PENDING, STATE_ACCOUNT.PROCESSING]
                     }
                 },
                 order: [["createdAt", "ASC"]]
@@ -156,7 +156,7 @@ class CustomerController {
 
             detailSavingsBook.deposit = formatMoney(detailSavingsBook.deposit);
             detailSavingsBook.interest = formatMoney(detailSavingsBook.interest);
-            detailSavingsBook.accountType = ONLINE_SAVING_MESSAGE[detailSavingsBook.accountType - 1];
+            detailSavingsBook.accountType = ONLINE_SAVING_MESSAGE[detailSavingsBook.accountType];
             detailSavingsBook.created = formatDate(detailSavingsBook.createdAt, "VN");
             detailSavingsBook.expirated = formatDate(detailSavingsBook.expirationDate, "VN");
             detailSavingsBook.typeDeposit = `${detailSavingsBook.Interest.factor}% / năm`;
