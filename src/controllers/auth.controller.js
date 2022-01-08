@@ -5,9 +5,9 @@ const { Staff, Office } = require("../models");
 module.exports.get = async (req, res, next) => {
     const { id } = req.signedCookies;
 
-    if (id) {
-        return res.redirect("back");
-    }
+    // if (id) {
+    //     return res.redirect("back");
+    // }
     const errors = await req.consumeFlash("error");
     res.render("auth/login", { errors });
 };
