@@ -1,6 +1,7 @@
 const { Staff, Office } = require("../models");
 const { Op } = require("sequelize");
-const { formatDate, hash256 } = require("../utils");
+const { formatDate, hash256, randomCharacters } = require("../utils");
+const mailer = require("../services/mailer");
 
 class PersonnelController {
     async getAll(req, res, next) {
@@ -49,7 +50,6 @@ class PersonnelController {
         }
     }
 
-
     async getCreatePersonnel(req, res, next) {
         try {
             const listOffices = await Office.findAll({
@@ -65,7 +65,6 @@ class PersonnelController {
             console.error(e);
         }
     }
-
 
     async postCreatePersonnel(req, res, next) {
         const { name, username, password, email, phone, sex, birthday, officeId, address } = req.body;
@@ -128,6 +127,32 @@ class PersonnelController {
             });
             await req.flash("info", "Cập nhập thông tin thành công !");
         } catch (e) {
+            await req.flash("error", e.message);
+        }
+        res.redirect("back");
+    }
+
+    async requestResetPassword(req, res, next) {
+        const { id_user } = req.params;
+
+        try {
+            const staffCurrent = await Staff.findByPk(id_user);
+            if (!staffCurrent) {
+                throw new Error("Vui lòng kiểm tra lại người dùng !");
+            }
+            const { email, name } = staffCurrent;
+            const password = randomCharacters(8);
+            staffCurrent.password = hash256(password);
+            await staffCurrent.save();
+
+            const html = `Tài khoản của nhân viên <b>${name}</b> đã đổi mật khẩu thành công <br/> Mật khẩu của bạn: <b>${password}</b>`;
+            await mailer(email, "Khôi phục mật khẩu", html);
+
+            await req.flash("info", `Đã gửi email chứa mật khẩu vào nhân viên ${name} !`);
+
+            res.redirect(`back`);
+        } catch (e) {
+            
             await req.flash("error", e.message);
         }
         res.redirect("back");

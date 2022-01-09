@@ -14,6 +14,8 @@ route.get("/personnel/:id/edit", personnelController.getDetail);
 
 route.put("/personnel/:id", personnelController.updatePersonnel);
 
+route.post("/personnel/:id_user/password", personnelController.requestResetPassword);
+
 route.route("/personnel/create").get(personnelController.getCreatePersonnel).post(personnelController.postCreatePersonnel);
 
 route.get("/office", officeController.index);
