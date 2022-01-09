@@ -152,7 +152,7 @@ class PersonnelController {
 
             res.redirect(`back`);
         } catch (e) {
-            
+
             await req.flash("error", e.message);
         }
         res.redirect("back");
