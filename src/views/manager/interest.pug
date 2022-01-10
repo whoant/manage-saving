@@ -5,7 +5,7 @@ mixin list(stt, interest)
         th(scope='row')= stt
         td= interest.name
         td #{interest.factor}% / năm
-        td= interest.Period.name
+        td= interest.periodName
         td= interest.created
 
 
@@ -13,8 +13,17 @@ block navbar
     include ../layout/navbarManager.pug
 block content
     .row.mt-4
-        .col-6
+        .col-10
             a.btn.btn-warning(href='#', data-toggle='modal', data-target='#add-periods-modal', data-id= id) Thêm lãi suất mới
+        .col-2
+            select.form-control#filter-period(name="filter-period")
+                if type === 'all'
+                    option(value="all") Tất cả
+                    option(value="current") Hiện hành
+                else
+                    option(value="current") Hiện hành
+                    option(value="all") Tất cả
+
 
         .col-12.mt-2
             table.table.table-bordered.text-center
@@ -22,8 +31,8 @@ block content
                     tr
                         th(scope='col', width='2%') #
                         th(scope='col') Tên lãi suất
-                        th(scope='col') Hệ số
-                        th(scope='col') Loại kì hạn
+                        th(scope='col') Lãi suất
+                        th(scope='col') Kì hạn
                         th(scope='col') Ngày hiệu lực
                 tbody
                     if interests
@@ -45,7 +54,7 @@ block content
                             label(for="name") Tên lãi suất
                             input#name.form-control(type="text", name="name", value= name ? name : "")
                         .form-group
-                            label(for="factor") Hệ số lãi suất / năm
+                            label(for="factor") Lãi suất / năm
                             input#factor.form-control(type="text", name="factor", value= factor ? factor : "")
                         .form-group
                             label(for="periodId") Loại kì hạn
@@ -56,3 +65,12 @@ block content
                     .modal-footer
                         button.btn.btn-danger#btn-add-periods(type='submit') Thêm
                         button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+    form(method="get", name="form-filter-period", style="display: none;")
+    script.
+        const filterForm = document.forms['form-filter-period'];
+        $('#filter-period').on('change', function() {
+            const link = '/manager/interest?type=' + this.value;
+            window.location.replace(link);
+
+
+        });

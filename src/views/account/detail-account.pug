@@ -54,11 +54,15 @@ block content
                                     .form-group.col-lg-4.col-12
                                         label(for="closingDate") Ngày đóng
                                         input#closingDate.form-control(type="text", name="closingDate", value= closingDate, disabled)
-                                if state == 1
+                                if state === 1
                                     a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id) Tất toán sớm
-                                if state == 2
+                                else if state === 4
                                     a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id) Tất toán đúng hạn
-                                a.btn.btn-primary.float-right(href="/staff/accounts/" + Customer.id + "/detail/" + id + "/download", target="_blank") Xuất sổ tiết kiệm
+
+                                if state === 2
+                                    a.btn.btn-warning.float-right(href="/staff/accounts/" + Customer.id + "/detail/" + id + "/download", target="_blank") Xuất phiếu xác nhận
+                                else
+                                    a.btn.btn-primary.float-right(href="/staff/accounts/" + Customer.id + "/detail/" + id + "/download", target="_blank") Xuất sổ tiết kiệm
     #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content

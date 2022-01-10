@@ -5,9 +5,9 @@ const { Staff, Office } = require("../models");
 module.exports.get = async (req, res, next) => {
     const { id } = req.signedCookies;
 
-    if (id) {
-        return res.redirect("back");
-    }
+    // if (id) {
+    //     return res.redirect("back");
+    // }
     const errors = await req.consumeFlash("error");
     res.render("auth/login", { errors });
 };
@@ -33,9 +33,10 @@ module.exports.post = async (req, res, next) => {
 
         if (checkUser.Office.short_name === "nhan_vien") {
             return res.redirect("/staff");
-        }
-        if (checkUser.Office.short_name === "giam_doc") {
+        } else if (checkUser.Office.short_name === "giam_doc") {
             return res.redirect("/manager");
+        } else if (checkUser.Office.short_name === "quan_tri_vien") {
+            return res.redirect("/admin");
         }
     } catch (e) {
         console.log(e);

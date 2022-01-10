@@ -1,33 +1,33 @@
-const nodemailer = require('nodemailer');
-const { MAIL_USER, MAIL_PASS } = require('../config');
+const nodemailer = require("nodemailer");
+const { MAIL_USER, MAIL_PASS } = require("../config");
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
         user: MAIL_USER,
-        pass: MAIL_PASS,
-    },
+        pass: MAIL_PASS
+    }
 });
 
-module.exports = (to, subject, html, content = '') => {
+module.exports = (to, subject, html, content = "") => {
     return new Promise((resolve, reject) => {
         let mainOptions = {
-            from: 'Võ Văn Hoàng Tuân',
+            from: `"Manage Saving" <${MAIL_USER}>`,
             to,
             subject,
-            html,
+            html
         };
 
-        if (content !== '') {
+        if (content !== "") {
             mainOptions = {
                 ...mainOptions,
                 attachments: {
-                    filename: 'file.pdf',
+                    filename: "file.pdf",
                     content,
-                    contentType: 'application/pdf',
-                },
+                    contentType: "application/pdf"
+                }
             };
         }
 

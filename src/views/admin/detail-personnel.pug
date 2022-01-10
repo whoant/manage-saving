@@ -10,7 +10,7 @@ block content
                     .row
                         .col-12
 
-                            form(action="/admin/user/"+ staff.id +"?_method=PUT", method="post")
+                            form(action="/admin/personnel/" + staff.id + "?_method=PUT", method="post")
                                 .row
                                     .form-group.col-lg-4.col-12
                                         label(for="name") Họ và tên
@@ -43,10 +43,39 @@ block content
                                     .form-group.col-lg-4.col-12
                                         label(for="officeId") Chức vụ
                                         select.form-control#officeId(name="officeId")
-                                                each office in listOffices
-                                                    if office.id == staff.officeId
-                                                        option(value= office.id, selected)= office.name
-                                                    else
-                                                        option(value= office.id)= office.name
-                                button.btn.btn-primary Reset mật khẩu
-                                button.btn.btn-danger.float-right Cập nhập thông tin nhân viên
+                                            each office in listOffices
+                                                if office.id == staff.officeId
+                                                    option(value= office.id, selected)= office.name
+                                                else
+                                                    option(value= office.id)= office.name
+                                button.btn.btn-danger.float-right Cập nhập thông tin
+                            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= staff.id) Khôi phục mật khẩu
+
+    #update-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Khôi phục mật khẩu ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    | Bạn chắc chắn khôi phục mật khẩu chứ ?
+                .modal-footer
+                    button.btn.btn-danger#btn-submit(type='button') Đồng ý
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+    form(method="post", name="form-update-user", style="display: none;")
+    script.
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteForm = document.forms['form-update-user'];
+            let idUser = null;
+
+            $('#update-user-modal').on('show.bs.modal', (event) => {
+                const button = $(event.relatedTarget);
+                idUser = button.data('id');
+            });
+            document.getElementById('btn-submit').addEventListener('click', () => {
+                deleteForm.action = `/admin/personnel/${idUser}/password?_method=POST`;
+                deleteForm.submit();
+            });
+
+        });

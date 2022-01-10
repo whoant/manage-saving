@@ -10,8 +10,8 @@ block content
                             form(action="/auth", method="post")
                                 .form-group
                                     label(for="username") Tài khoản
-                                    input#timeout.form-control(type="text", name="username", value= username ? username : "tuan")
+                                    input#username.form-control(type="text", name="username", value= username ? username : "")
                                 .form-group
                                     label(for="password") Mật khẩu
-                                    input#timeout.form-control(type="password", name="password", value= password ? password : "tuan")
+                                    input#password.form-control(type="password", name="password", value= password ? password : "")
                                 button.btn.btn-primary.float-right Đăng nhập

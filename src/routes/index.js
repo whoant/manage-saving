@@ -9,7 +9,8 @@ const authMiddleware = require("../middlewares/auth.middleware");
 module.exports = app => {
     app.use("/staff", authMiddleware.requireAuth, authMiddleware.requirePermissions("nhan_vien"), staffRoute);
     app.use("/manager", authMiddleware.requireAuth, authMiddleware.requirePermissions("giam_doc"), manageRoute);
-    app.use("/admin", adminRoute);
+    app.use("/admin", authMiddleware.requireAuth, authMiddleware.requirePermissions("quan_tri_vien"), adminRoute);
+    // app.use("/admin", adminRoute);
     app.use("/customer", customerRoute);
     app.use("/auth", authRoute);
 };

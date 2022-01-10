@@ -3,7 +3,6 @@ const html_to_pdf = require("html-pdf-node");
 const pug = require("pug");
 const path = require("path");
 
-const compiledFunction = pug.compileFile(path.join(__dirname, "..", "static", "deposit.pug"));
 
 const hash256 = (text) => {
     return crypto.createHash("sha256").update(text).digest("hex");
@@ -38,36 +37,37 @@ const randomCharacters = (length) => {
     return result;
 };
 
-const generateDeposit = async ({
-                                   id,
-                                   name,
-                                   type,
-                                   createdAt,
-                                   expirationDate,
-                                   interest,
-                                   totalAmount,
-                                   typeDeposit,
-                                   deposit
-                               }) => {
-    try {
-        const content = compiledFunction({
-            id,
-            type,
-            name,
-            createdAt,
-            expirationDate,
-            interest,
-            totalAmount,
-            typeDeposit,
-            deposit
-        });
+const generateDeposit = ({
+                             id,
+                             name,
+                             type,
+                             createdAt,
+                             expirationDate,
+                             interest,
+                             totalAmount,
+                             typeDeposit,
+                             deposit,
+                             today
+                         }, typeExport = "deposit") => {
+    let fileName = "deposit.pug";
+    if (typeExport === "bill") fileName = "bill.pug";
+    const compiledFunction = pug.compileFile(path.join(__dirname, "..", "static", fileName));
 
-        const options = { format: "A4" };
-        const pdfBuffer = await html_to_pdf.generatePdf({ content }, options);
-        return pdfBuffer;
-    } catch (e) {
-        return Promise.reject(e);
-    }
+    const content = compiledFunction({
+        id,
+        type,
+        name,
+        createdAt,
+        expirationDate,
+        interest,
+        totalAmount,
+        typeDeposit,
+        deposit,
+        today
+    });
+
+    const options = { format: "A4" };
+    return html_to_pdf.generatePdf({ content }, options);
 };
 
 module.exports = {

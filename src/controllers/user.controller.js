@@ -35,7 +35,7 @@ module.exports.get = async (req, res, next) => {
         let total = 0;
         let amount = 0;
         customer.SavingsBooks.forEach((book) => {
-            if (book.state === STATE_ACCOUNT.PENDING) {
+            if (book.state === STATE_ACCOUNT.PENDING || book.state === STATE_ACCOUNT.PROCESSING) {
                 amount += book.deposit;
                 total += 1;
             }
@@ -78,7 +78,7 @@ module.exports.createUser = async (req, res, next) => {
             }
 
 
-            const password = randomCharacters(6);
+            const password = randomCharacters(8);
 
             req.body.password = hash256(password);
             const newCustomer = await Customer.create(req.body);
@@ -88,7 +88,7 @@ module.exports.createUser = async (req, res, next) => {
             const subject = "Tạo tài khoản thành công !";
             const html = `Chúc mừng bạn <b>${fullName}</b>, bạn đã tạo tài khoản thành công <br/> Mật khẩu mặc định của bạn: <b>${password}</b>`;
             await mailer(email, subject, html);
-            
+
             await req.flash("info", "Tạo khách hàng thành công !");
             res.redirect("/staff/users");
         } catch (e) {
@@ -193,7 +193,7 @@ module.exports.updatePassword = async (req, res, next) => {
             throw new Error("Vui lòng kiểm tra lại người dùng !");
         }
         const { email, fullName } = customerCurrent;
-        const password = randomCharacters(6);
+        const password = randomCharacters(8);
         const html = `Tài khoản của bạn <b>${fullName}</b> đã đổi mật khẩu thành công <br/> Mật khẩu của bạn: <b>${password}</b>`;
 
         await mailer(email, "Khôi phục mật khẩu", html);

@@ -1,4 +1,11 @@
 extends ../layout/main.pug
+
+mixin list(stt, period)
+    tr#table-primary
+        th(scope='row')= stt
+        td= period.name
+        td= period.Interests.factor + " % / năm"
+
 block navbar
     include ../layout/navbarCustomer.pug
 block content
@@ -20,3 +27,17 @@ block content
                                         h5 Số tiền tiết kiệm
                                         p Bạn có #{total} tài khoản  tiết kiệm
                                     a.card-title.money.deposit(href="customer/history") #{amount}
+            .card.mt-5
+                .card-header.text-center Lãi suất mới nhất
+                .card-body
+                    table.table.table-bordered.text-center
+                        thead
+                            tr
+                                th(scope='col', width='2%') #
+                                th(scope='col') Kì hạn
+                                th(scope='col') Lãi suất
+                        tbody
+                            if listPeriodsRender
+                                - var x = 1
+                                each period in listPeriodsRender
+                                    +list(x++, period)
