@@ -78,7 +78,7 @@ module.exports.createUser = async (req, res, next) => {
             }
 
 
-            const password = randomCharacters(6);
+            const password = randomCharacters(8);
 
             req.body.password = hash256(password);
             const newCustomer = await Customer.create(req.body);
@@ -193,7 +193,7 @@ module.exports.updatePassword = async (req, res, next) => {
             throw new Error("Vui lòng kiểm tra lại người dùng !");
         }
         const { email, fullName } = customerCurrent;
-        const password = randomCharacters(6);
+        const password = randomCharacters(8);
         const html = `Tài khoản của bạn <b>${fullName}</b> đã đổi mật khẩu thành công <br/> Mật khẩu của bạn: <b>${password}</b>`;
 
         await mailer(email, "Khôi phục mật khẩu", html);
