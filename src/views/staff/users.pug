@@ -9,7 +9,8 @@ mixin list(stt, customer)
         td= customer.balance
         td= customer.amount
         td
-            a(href='/staff/accounts/' + customer.id)= customer.total
+            a(href='/staff/accounts/' + customer.id)
+                span.label.label-inline.label-light-success.font-weight-bold= customer.total
 
 block navbar
     include ../layout/navbarStaff.pug
@@ -20,22 +21,24 @@ block content
         .col-6
             form(action="/staff/users", method="get")
                 .form-group
-                    input#name.form-control(type="text", name="search", placeholder="Nhập chứng minh thư", value= search ? search: "")
+                    input#name.form-control(type="text", name="search", placeholder="Nhập chứng minh thư", value= search ? search : "")
         .col-12.mt-2
-            table.table.table-bordered.text-center
-                thead
-                    tr
-                        th(scope='col', width='2%') #
-                        th(scope='col') Chứng minh thư
-                        th(scope='col') Tên
-                        th(scope='col') Số dư
-                        th(scope='col') Số dư tiết kiệm
-                        th(scope='col') Tài khoản hiện hữu
-                tbody
-                    if listCustomer
-                        - var x = 1
-                        each customer in listCustomer
-                            +list(x++, customer)
+            .card
+                .card-body
+                    table.table.table-hover
+                        thead
+                            tr
+                                th(scope='col', width='2%') #
+                                th(scope='col') Chứng minh thư
+                                th(scope='col') Tên
+                                th(scope='col') Số dư
+                                th(scope='col') Số dư tiết kiệm
+                                th(scope='col') Tài khoản hiện hữu
+                        tbody
+                            if listCustomer
+                                - var x = 1
+                                each customer in listCustomer
+                                    +list(x++, customer)
 
 
     #delete-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
@@ -66,7 +69,7 @@ block content
             });
 
             document.getElementById('btn-delete-user').addEventListener('click', () => {
-                deleteForm.action = '/staff/users/' + idUser  + '?_method=DELETE';
+                deleteForm.action = '/staff/users/' + idUser + '?_method=DELETE';
                 deleteForm.submit();
             });
 

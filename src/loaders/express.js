@@ -10,16 +10,13 @@ const route = require("../routes");
 const { SESSION_SECRET } = require("../config");
 
 module.exports = (app) => {
-    
+
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
 
     app.use(methodOverride("_method"));
     app.set("view engine", "pug");
     app.set("views", path.join(__dirname, "../", "views"));
-
-    app.use(express.static(path.join(__dirname, "../", "public")));
-    // app.use("/css", express.static(path.join(__dirname, "../", "public", "css")));
     app.use(cookieParser(SESSION_SECRET));
     app.use(
         session({
@@ -31,9 +28,11 @@ module.exports = (app) => {
             }
         })
     );
+    
     app.use(flash({ sessionKeyName: "flashMessage" }));
-
     route(app);
+    app.use(express.static(path.join(__dirname, "../", "public")));
+
     app.all("*", (req, res, next) => {
         res.send("ERROR");
     });

@@ -30,6 +30,7 @@ class PersonnelController {
         try {
             const staff = await Staff.findByPk(id, { raw: true });
             if (!staff) return res.redirect("/admin/personnel");
+
             const listOffices = await Office.findAll({ raw: true });
             const birthday = formatDate(staff.birthday);
             const [messages, errors] = await Promise.all([

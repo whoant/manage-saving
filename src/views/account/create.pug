@@ -4,7 +4,7 @@ block navbar
 block content
     .row
         .col-xl-12.col.md-12.col-12
-            .card.mt-5
+            .card
                 .card-body
                     h3.card-title.text-center Thông tin khách hàng
                     .row
@@ -60,7 +60,7 @@ block content
         document.addEventListener('DOMContentLoaded', () => {
 
             $('#date-end').val(moment().add(a[0].month, 'M').format('DD/MM/YYYY'));
-            $("#deposit").on('input', function(e) {
+            $("#deposit").on('input', function (e) {
                 text = this.value;
                 let value = formatMoney(text);
                 $('label[for="deposit"]').text(`Số tiền : ${value}`);
@@ -68,7 +68,7 @@ block content
                 $('#interest-money').val(formatMoney(money));
             });
 
-            $('#interest_id').on('change', function() {
+            $('#interest_id').on('change', function () {
                 indexPeriod = a.findIndex(ele => ele.Interests.id === this.value);
                 periodCurrent = a[indexPeriod];
                 $('#date-end').val(moment().add(periodCurrent.month, 'M').format('DD/MM/YYYY'));

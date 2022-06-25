@@ -1,4 +1,4 @@
-extends ../layout/main.pug
+extends ../layout/mainCustomer.pug
 
 mixin list(stt, period)
     tr#table-primary
@@ -11,8 +11,8 @@ block navbar
 block content
     .row
         .col-xl-12.col.md-12.col-12
-            .card.mt-5
-                .card-header.text-center Thông tin chung
+            .card
+                h3.card-header.text-center Thông tin chung
                 .card-body
                     .row.d-flex.justify-content-center
                         .col-xl-10.col-10.mt-4
@@ -28,13 +28,13 @@ block content
                                         p Bạn có #{total} tài khoản  tiết kiệm
                                     a.card-title.money.deposit(href="customer/history") #{amount}
             .card.mt-5
-                .card-header.text-center Lãi suất mới nhất
+                h3.card-header.text-center Lãi suất mới nhất
                 .card-body
-                    table.table.table-bordered.text-center
+                    table.table.table-hover
                         thead
                             tr
-                                th(scope='col', width='2%') #
-                                th(scope='col') Kì hạn
+                                th(scope='col') #
+                                th(scope='col', width="70%") Kì hạn
                                 th(scope='col') Lãi suất
                         tbody
                             if listPeriodsRender

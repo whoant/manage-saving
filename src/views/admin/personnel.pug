@@ -1,12 +1,20 @@
 extends ../layout/main.pug
 
-mixin list(stt, id, name, user, office)
+mixin list(stt, id, name, user, office, short_name)
     tr
         th(scope='row')= stt
         td
             a(href='/admin/personnel/' + id + '/edit')= name
         td= user
-        td= office
+        if short_name == 'quan_tri_vien'
+            td
+                span.label.label-inline.label-light-primary.font-weight-bold= office
+        else if short_name == 'giam_doc'
+            td
+                span.label.label-inline.label-light-success.font-weight-bold= office
+        else
+            td
+                span.label.label-inline.label-light-danger.font-weight-bold= office
         td
             a.btn.btn-primary.mr-2(href='/admin/personnel/' + id + '/edit')
                 | Chỉnh sửa
@@ -16,7 +24,7 @@ mixin list(stt, id, name, user, office)
 block navbar
     include ../layout/navbarAdmin.pug
 block content
-    .row.mt-4
+    .row
         .col-6
             a.btn.btn-warning(href='/admin/personnel/create') Thêm nhân viên mới
         .col-6
@@ -24,19 +32,21 @@ block content
                 .form-group
                     input#name.form-control(type="text", name="search", placeholder="Nhập tên cần tìm kiếm", value= search ? search : "")
         .col-12.mt-2
-            table.table.table-bordered.text-center
-                thead
-                    tr
-                        th(scope='col', width='2%') #
-                        th(scope='col') Tên
-                        th(scope='col') Username
-                        th(scope='col') Chức vụ
-                        th(scope='col', width='20%') Chức năng
-                tbody
-                    if listStaffs
-                        - var x = 1
-                        each staff in listStaffs
-                            +list(x++, staff.id, staff.name, staff.username, staff.Office.name)
+            .card
+                .card-body
+                    table.table.table-hover
+                        thead
+                            tr
+                                th(scope='col', width='2%') #
+                                th(scope='col') Tên
+                                th(scope='col') Username
+                                th(scope='col') Chức vụ
+                                th(scope='col', width='20%') Chức năng
+                        tbody
+                            if listStaffs
+                                - var x = 1
+                                each staff in listStaffs
+                                    +list(x++, staff.id, staff.name, staff.username, staff.Office.name, staff.Office.short_name)
 
 
 

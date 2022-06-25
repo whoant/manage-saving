@@ -82,7 +82,7 @@ module.exports.createUser = async (req, res, next) => {
 
             req.body.password = hash256(password);
             const newCustomer = await Customer.create(req.body);
-            const newFile = req.file.path.replace(filename, newCustomer.id + "png");
+            const newFile = req.file.path.replace(filename, newCustomer.id + ".png");
             fs.renameSync(req.file.path, newFile);
 
             const subject = "Tạo tài khoản thành công !";

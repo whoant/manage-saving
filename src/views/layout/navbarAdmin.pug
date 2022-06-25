@@ -1,21 +1,14 @@
-nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-    a.navbar-brand(href='/admin')
-        | Quản trị viên
-    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
-        span.navbar-toggler-icon
-    #navbarNav.collapse.navbar-collapse
-        ul.navbar-nav.mr-auto.mt-2.mt-lg-0
-            li.nav-item
-                a.nav-link(href='/admin/personnel') Nhân viên
-            li.nav-item
-                a.nav-link(href='/admin/office') Chức vụ
-        ul.navbar-nav.ml-auto.dropdown-menu-lg-right
-            li.nav-item.dropdown
-                a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                    | #{user.name}
-                .dropdown-menu.dropdown-menu-lg-right.dropdown(aria-labelledby='navbarDropdown')
-                    form.form-inline.my-2.my-lg-0#info(action="/admin/info", method="get")
-                        a.dropdown-item(href="javascript:$('#info').submit()") Chỉnh sửa mật khẩu
-                    .dropdown-divider
-                    form.form-inline.my-2.my-lg-0#logout(action="/auth?_method=DELETE", method="post")
-                        a.dropdown-item(href="javascript:$('#logout').submit()") Đăng xuất
+#kt_aside_menu.aside-menu.my-4(data-menu-vertical='1' data-menu-scroll='1' data-menu-dropdown-timeout='500')
+    ul.menu-nav
+        li.menu-item(aria-haspopup='true')
+            a.menu-link(href='/admin')
+                i.menu-icon.flaticon-home
+                span.menu-text Dashboard
+        li.menu-item(aria-haspopup='true')
+            a.menu-link(href='/admin/office')
+                i.menu-icon.flaticon-home
+                span.menu-text Quản lý chức vụ
+        li.menu-item(aria-haspopup='true')
+            a.menu-link(href='/admin/personnel')
+                i.menu-icon.flaticon-home
+                span.menu-text Quản lý nhân viên

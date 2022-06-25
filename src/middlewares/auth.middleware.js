@@ -11,7 +11,9 @@ module.exports.requireAuth = async (req, res, next) => {
             where: {
                 id
             },
-            include: Office
+            include: Office,
+            raw: true,
+            nest: true
         });
 
         if (!checkUser) {
@@ -27,7 +29,7 @@ module.exports.requireAuth = async (req, res, next) => {
 module.exports.requirePermissions = (permissions) => {
     return (req, res, next) => {
         const { Office } = res.locals.user;
-        
+
         if (Office.short_name === permissions) {
             return next();
         }

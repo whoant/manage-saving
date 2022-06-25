@@ -1,10 +1,11 @@
 extends ../layout/main.pug
 
-mixin list(stt, id, name, count = 0)
+mixin list(stt, id, name, count)
     tr
         th(scope='row')= stt
         td= name
-        td= count
+        td
+            span.label.label-inline.label-light-primary.font-weight-bold= count
 block navbar
     include ../layout/navbarAdmin.pug
 block content
@@ -12,14 +13,16 @@ block content
         .col-12.mt-4
             a.btn.btn-warning(href='/admin/office/create') Thêm chức vụ mới
         .col-12.mt-2
-            table.table.table-bordered.text-center
-                thead
-                    tr
-                        th(scope='col', width='2%') #
-                        th(scope='col') Chức vụ
-                        th(scope='col', width='30%') Số lượng nhân viên
-                tbody
-                    if listOffices
-                      - var x = 1
-                      each office in listOffices
-                          +list(x++, office.id, office.name, office.Staffs.length)
+            .card
+                .card-body
+                    table.table.table-hover
+                        thead
+                            tr
+                                th(scope='col') #
+                                th(scope='col', width='70%') Chức vụ
+                                th(scope='col') Số lượng nhân viên
+                        tbody
+                            if listOffices
+                                - var x = 1
+                                each office in listOffices
+                                    +list(x++, office.id, office.name, office.Staffs.length)

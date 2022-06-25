@@ -39,7 +39,7 @@ class OfficeController {
 
             res.redirect('/admin/office');
         } catch (e) {
-            await req.flash('error', e.message);
+            await req.flash('error', "Chức vụ đã tồn tại");
             res.redirect('/admin/office/create');
             next(e);
         }
