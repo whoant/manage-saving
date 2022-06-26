@@ -17,7 +17,9 @@ block navbar
 block content
     .row.mt-4
         .col-6
-            a.btn.btn-warning(href='/staff/users/create') Thêm khách hàng mới
+            a.btn.btn-info.font-weight-bolder.font-size-sm.mr-3(href='/staff/users/create')
+                i.flaticon2-avatar
+                | Thêm khách hàng mới
         .col-6
             form(action="/staff/users", method="get")
                 .form-group

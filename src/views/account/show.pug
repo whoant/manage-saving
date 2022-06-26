@@ -18,7 +18,9 @@ block navbar
 block content
     .row.mt-4
         .col-6
-            a.btn.btn-warning(href='/staff/accounts/' + infoUser.id + '/create') Thêm tài khoản tiết kiệm mới
+            a.btn.btn-warning(href='/staff/accounts/' + infoUser.id + '/create')
+                i.flaticon2-add-1
+                | Thêm tài khoản tiết kiệm mới
         .col-6
             form(action='/staff/accounts/' + infoUser.id + '?search', method="get")
                 .form-group

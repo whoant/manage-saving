@@ -48,7 +48,7 @@ module.exports.indexInterest = async (req, res, next) => {
         }
 
         const messages = await req.consumeFlash("info");
-        
+
         res.render("manager/interest", {
             periods,
             interests: interestsRender,
@@ -114,6 +114,7 @@ module.exports.getDetailPassword = async (req, res, next) => {
         req.consumeFlash("info"),
         req.consumeFlash("error")
     ]);
+    
     res.render("manager/info", {
         name: user.name,
         messages,

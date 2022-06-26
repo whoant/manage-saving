@@ -17,8 +17,10 @@ mixin list(stt, id, name, user, office, short_name)
                 span.label.label-inline.label-light-danger.font-weight-bold= office
         td
             a.btn.btn-primary.mr-2(href='/admin/personnel/' + id + '/edit')
+                i.flaticon2-edit
                 | Chỉnh sửa
             a.btn.btn-danger(href='#', data-toggle='modal', data-target='#delete-user-modal', data-id= id)
+                i.flaticon2-rubbish-bin-delete-button
                 | Xoá
 
 block navbar
@@ -26,7 +28,9 @@ block navbar
 block content
     .row
         .col-6
-            a.btn.btn-warning(href='/admin/personnel/create') Thêm nhân viên mới
+            a.btn.btn-warning(href='/admin/personnel/create')
+                i.flaticon2-add-1
+                | Thêm nhân viên mới
         .col-6
             form(action="/admin/personnel", method="get")
                 .form-group

@@ -14,7 +14,9 @@ block navbar
 block content
     .row.mt-4
         .col-10
-            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#add-periods-modal', data-id= id) Thêm lãi suất mới
+            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#add-periods-modal', data-id= id)
+                i.flaticon2-edit
+                | Thêm lãi suất mới
         .col-2
             select.form-control#filter-period(name="filter-period")
                 if type === 'all'

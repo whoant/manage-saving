@@ -49,7 +49,9 @@ block content
                                                 else
                                                     option(value= office.id)= office.name
                                 button.btn.btn-danger.float-right Cập nhập thông tin
-                            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= staff.id) Khôi phục mật khẩu
+                            a.btn.btn-warning(href='#', data-toggle='modal', data-target='#update-user-modal', data-id= staff.id)
+                                i.flaticon-cancel
+                                | Khôi phục mật khẩu
 
     #update-user-modal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
         .modal-dialog(role='document')
