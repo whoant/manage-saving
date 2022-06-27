@@ -31,13 +31,8 @@ module.exports.post = async (req, res, next) => {
 
         res.cookie("id", checkUser.id, { signed: true });
 
-        if (checkUser.Office.short_name === "nhan_vien") {
-            return res.redirect("/staff");
-        } else if (checkUser.Office.short_name === "giam_doc") {
-            return res.redirect("/manager");
-        } else if (checkUser.Office.short_name === "quan_tri_vien") {
-            return res.redirect("/admin");
-        }
+        return res.redirect("/dashboard");
+       
     } catch (e) {
         console.log(e);
     }
